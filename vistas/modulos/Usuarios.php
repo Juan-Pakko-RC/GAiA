@@ -55,7 +55,7 @@
                                 echo "<td>" . $usuario['nombres'] . "</td>";
                                 echo "<td>" . $usuario['apellidos'] . "</td>";
                                 echo "<td>" . $usuario['correo'] . "</td>";
-                                echo "<td>" . $usuario['ficha'] . "</td>";
+                                echo "<td>" . $usuario['ficha_id'] . "</td>";
                                 echo "<td>" . $usuario['rol'] . "</td>";
                                 echo "<td>";
                                 if ($usuario['estado'] == 'activo') {
@@ -119,7 +119,7 @@ AGREGAR USUARIO   -->
                                   <div class="input-group-prepend">
                                       <span class="input-group-text"><i class="fas fa-id-card"></i></span>
                                   </div>
-                                  <input type="text" class="form-control" name="nuevoDocumento" placeholder="Numero identificación" required>
+                                  <input id="nuevoDocumento" type="text" class="form-control" name="nuevoDocumento" placeholder="Numero identificación" required>
                               </div>
 
                           </div>

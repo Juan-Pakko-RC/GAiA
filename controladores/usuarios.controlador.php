@@ -2,6 +2,8 @@
 
 class ControladorUsuarios{
 
+    //LOGIN
+
     public function ctrIngresarUsuario(){
         if (isset($_POST["ingDocumento"])){
             if (
@@ -27,10 +29,14 @@ class ControladorUsuarios{
         }
     } //fin del metodo de ingresar usuario
 
+    //LISTADO DE USUARIOS
+
     static public function ctrListarUsuarios(){
         $respuesta= ModeloUsuarios::mdlListarUsuarios();
         return $respuesta;
     } //fin del metodo ctrListarUsuarios
+
+    //AGREGAR NUEVOS USUARIOS
 
     public function ctrAgregarUsuario(){
 
@@ -95,6 +101,16 @@ class ControladorUsuarios{
 
               }
         }  // fin del isset
-    }
+    } //fin del metodo ctrAgregarUsuarios
+
+    //MOSTRAR USUARIOS
+
+    static public function ctrMostrarUsuarios($item, $valor) {
+
+        $tabla = "usuarios";
+        $respuesta = ModeloUsuarios::mdlMostrarUsuarios($tabla, $item, $valor);
+        return $respuesta;
+
+    } //fin del metodo ctrMostrarUsuarios
 
 }//fin de la clase ControladorUsuarios

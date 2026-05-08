@@ -16,7 +16,7 @@ class ModeloUsuarios{
         $stmt = Conexion::conectar()->prepare("SELECT * FROM usuarios");
         $stmt->execute();
         return $stmt->fetchAll();    
-    }
+    } //fin del método mdlListarUsuarios
 
     static public function mdlAgregarUsuario($tabla, $datos){
         
@@ -34,8 +34,16 @@ class ModeloUsuarios{
         }else{
             return "error";
         }
-    }
+    } //fin del método mdlAgregarUsuario
 
+    static public function mdlMostrarUsuarios($tabla, $item, $valor){
+
+        $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :valor");
+        $stmt->bindParam(":valor", $valor, PDO::PARAM_STR);
+        $stmt->execute();
+        return $stmt->fetch();
+
+    }
 
 
 } // fin de la clase ModeloUsuarios
