@@ -5,7 +5,7 @@
          <h1 class="m-0 text-uppercase font-weight-bold">SEDES</h1>
        </div>
        <div class="col-sm-6 text-right">
-         <button class="btn btn-success" data-toggle="modal" data-target="#modalAgregarSede">
+         <button class="btn btn-success" data-toggle="modal" data-target="#modal-agregarSede">
            Agregar Sede
          </button>
        </div>
@@ -32,7 +32,7 @@
                </tr>
              </thead>
              <tbody>
-                <?php
+               <?php
                 $respuesta = ControladorSedes::ctrListarSedes();
                 //var_dump($respuesta);
                 foreach ($respuesta as $sede) {
@@ -66,3 +66,48 @@
      </div>
    </div>
  </section>
+
+ <!-- ********************************************************************************************************
+AGREGAR SEDE   -->
+
+ <div class="modal fade" id="modal-agregarSede">
+   <div class="modal-dialog">
+     <div class="modal-content">
+       <div class="modal-header">
+         <h4 class="modal-title">Agregar sede</h4>
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+         </button>
+       </div>
+       <div class="modal-body">
+        <form action="" method="post">
+
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-home"></i></span>
+            </div>
+            <input type="text" class="form-control" name="nuevoNombreSede" placeholder="Nombre de la sede" required>
+          </div>
+
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
+            </div>
+            <input type="text" class="form-control" name="nuevaDireccionSede" placeholder="Dirección de la sede" required>
+          </div>
+        </div>
+       <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+       </div>
+       <?php
+        $agregarSede = new ControladorSedes();
+        $agregarSede -> ctrAgregarSede();
+        ?>
+       </form>
+     </div>
+     <!-- /.modal-content -->
+   </div>
+   <!-- /.modal-dialog -->
+ </div>
+ <!-- /.modal -->
