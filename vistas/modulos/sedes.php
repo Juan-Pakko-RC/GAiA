@@ -32,17 +32,16 @@
                </tr>
              </thead>
              <tbody>
-               <?php
+                <?php
                 $respuesta = ControladorSedes::ctrListarSedes();
-                // var_dump($respuesta);
-                foreach ($sedes as $sede) {
+                //var_dump($respuesta);
+                foreach ($respuesta as $sede) {
                   echo "<tr>";
                   echo "<td>" . $sede['id_sedes'] . "</td>";
                   echo "<td>" . $sede['descripcion_sede'] . "</td>";
                   echo "<td>" . $sede['direccion_sede'] . "</td>";
-                  echo "<td>" . $sede['nombres'] . "</td>";
                   echo "<td>";
-                  if ($sede['estado'] == 'activo') {
+                  if ($sede) {
                     echo "<button class='btn btn-xs btn-success'>activo</button>";
                   } else {
                     echo "<button class='btn btn-xs btn-danger'>inactivo</button>";
@@ -50,8 +49,8 @@
                   echo "</td>";
                   echo "<td>";
                   echo '<div class="btn-group">
-                            <button class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#modal-editarUsuario"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#modal-consultarUsuario"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#modal-editarSede"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#modal-consultarSede"><i class="fas fa-eye"></i></button>
                           </div>
                         </td>';
 
