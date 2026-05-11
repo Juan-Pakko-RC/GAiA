@@ -106,8 +106,5 @@ AGREGAR SEDE   -->
         ?>
        </form>
      </div>
-     <!-- /.modal-content -->
    </div>
-   <!-- /.modal-dialog -->
- </div>
- <!-- /.modal -->
+  </div>

@@ -15,7 +15,7 @@ class ModeloSedes {
         $stmt = Conexion::conectar()->prepare("INSERT INTO $tabla (descripcion_sede, direccion_sede)
         VALUES (:nombreSede, :direccionSede)");
         $stmt->bindParam(":nombreSede", $datos["nombreSede"], PDO::PARAM_STR);
-        $stmt->bindParam(":dreccionSede", $datos["direccionSede"], PDO::PARAM_STR);
+        $stmt->bindParam(":direccionSede", $datos["direccionSede"], PDO::PARAM_STR);
         if ($stmt->execute()){
 
             return "ok";
