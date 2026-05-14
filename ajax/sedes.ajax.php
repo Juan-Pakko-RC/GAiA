@@ -26,6 +26,24 @@ class AjaxSedes
         $respuesta = ControladorSedes::ctrMostrarSedes($item, $valor);
         echo json_encode($respuesta);
     }
+
+    public $validarNombre;
+    public function ajaxValidarNombreSede()
+    {
+        $item = "descripcion_sede";
+        $valor = $this->validarNombre;
+        $respuesta = ControladorSedes::ctrMostrarSedes($item, $valor);
+        echo json_encode($respuesta);
+    }
+
+    public $validarDireccion;
+    public function ajaxValidarDireccionSede()
+    {
+        $item = "direccion_sede";
+        $valor = $this->validarDireccion;
+        $respuesta = ControladorSedes::ctrMostrarSedes($item, $valor);
+        echo json_encode($respuesta);
+    }
 }
 
 if (isset($_POST["idSedeEstado"]) && isset($_POST["estado"])) {
@@ -39,4 +57,16 @@ if (isset($_POST["idSede"])) {
     $editar = new AjaxSedes();
     $editar->idSede = $_POST["idSede"];
     $editar->ajaxEditarSede();
+}
+
+if (isset($_POST["validarNombre"])) {
+    $valNombre = new AjaxSedes();
+    $valNombre->validarNombre = $_POST["validarNombre"];
+    $valNombre->ajaxValidarNombreSede();
+}
+
+if (isset($_POST["validarDireccion"])) {
+    $valDireccion = new AjaxSedes();
+    $valDireccion->validarDireccion = $_POST["validarDireccion"];
+    $valDireccion->ajaxValidarDireccionSede();
 }
