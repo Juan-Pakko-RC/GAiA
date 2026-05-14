@@ -71,15 +71,6 @@ class ModeloUsuarios
 
     }
 
-    static public function mdlMostrarUsuarios($tabla, $item, $valor)
-    {
-        $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :valor");
-        $stmt->bindParam(":valor", $valor, PDO::PARAM_STR);
-        error_log("valor en el modelo:" . $tabla);
-        $stmt->execute();
-        return $stmt->fetch();
-    }
-
     // ************************************
     // EDITAR USUARIO EN LA BD
     // ************************************    

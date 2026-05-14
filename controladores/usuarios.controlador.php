@@ -134,16 +134,6 @@ class ControladorUsuarios
         }  // fin del isset
     } //fin del metodo ctrAgregarUsuarios
 
-    //MOSTRAR USUARIOS
-
-    static public function ctrMostrarUsuarios($item, $valor)
-    {
-
-        $tabla = "usuarios";
-        $respuesta = ModeloUsuarios::mdlMostrarUsuarios($tabla, $item, $valor);
-        return $respuesta;
-    } //fin del metodo ctrMostrarUsuarios
-
     // ************************************
     // TRAER UN USUARIO ESPECIFICO DE LA BD
     // ************************************

@@ -14,7 +14,6 @@ $('#nuevoDocumento').change(function() {
         dataType: "json",
         success: function(respuesta) {
             console.log(respuesta);
-<<<<<<< HEAD
             if (respuesta){
                 $("#nuevoDocumento").val("");
                 Swal.fire({

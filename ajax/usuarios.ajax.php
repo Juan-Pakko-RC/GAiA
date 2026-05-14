@@ -3,13 +3,6 @@
 require_once "../controladores/usuarios.controlador.php";
 require_once "../modelos/usuarios.modelo.php";
 
-<<<<<<< HEAD
-class AjaxUsuarios {
-
-    public $nuevoDocumento;
-
-    public function ajaxValidarDocumento() {
-=======
 class AjaxUsuarios
 {
 
@@ -19,7 +12,6 @@ class AjaxUsuarios
 
     public function ajaxValidarDocumento()
     {
->>>>>>> main
 
         $item = "documento_id";
         $valor = $this->nuevoDocumento;
@@ -29,8 +21,6 @@ class AjaxUsuarios
         echo json_encode($respuesta);
     }
 
-<<<<<<< HEAD
-=======
     public function ajaxCambiarEstado()
     {
 
@@ -48,7 +38,6 @@ class AjaxUsuarios
         $respuesta = ControladorUsuarios::ctrMostrarUsuarios($item, $valor);
         echo json_encode($respuesta);
     }
->>>>>>> main
 }
 
 if (isset($_POST["nuevoDocumento"])) {
@@ -57,9 +46,6 @@ if (isset($_POST["nuevoDocumento"])) {
     $valDocumento->ajaxValidarDocumento();
 }
 
-<<<<<<< HEAD
-?>
-=======
 if (isset($_POST["idUsuarioEstado"]) && isset($_POST["estado"])) {
     $actUsuario = new AjaxUsuarios();
     $actUsuario->idUsuarioEstado = $_POST["idUsuarioEstado"];
@@ -72,4 +58,3 @@ if (isset($_POST["idUsuario"])) {
     $editar->idUsuario = $_POST["idUsuario"];
     $editar->ajaxEditarUsuario();
 }
->>>>>>> main
