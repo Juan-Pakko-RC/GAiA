@@ -197,3 +197,57 @@ $('#inputEditarFicha').on('input', function() {
         $('#divDescripcionEditarFicha').hide();
     }
 });
+
+//===========================================
+// CONSULTAR USUARIO
+//===========================================
+$(document).on("click", ".btnConsultarUsuario", function() {
+    let idUsuario = $(this).attr("data-idUsuario");
+    let datos = new FormData();
+    datos.append("idUsuario", idUsuario);
+
+    $.ajax({
+        url: "ajax/usuarios.ajax.php",
+        method: "POST",
+        data: datos,
+        cache: false,
+        contentType: false,
+        processData: false,
+        dataType: "json",
+        success: function(respuesta) {
+            $("#consultarTipoDocumento").val(respuesta["tipo_documento"]);
+            $("#consultarDocumento").val(respuesta["documento_id"]);
+            $("#consultarNombre").val(respuesta["nombres"]);
+            $("#consultarApellido").val(respuesta["apellidos"]);
+            $("#consultarFechaNacimiento").val(respuesta["fecha_nacimiento"]);
+            $("#consultarCorreo").val(respuesta["correo"]);
+            $("#consultarRol").val(respuesta["rol"]);
+
+            // Lógica para Aprendiz (Ficha)
+            if(respuesta["rol"] === "Aprendiz" || respuesta["rol"] === "APRENDIZ"){
+                $("#divConsultarFicha").show();
+                
+                // Buscar ficha en el datalist para mostrar el programa
+                if(respuesta["ficha_id"]){
+                    let fichaOption = $('#listaFichas option[data-id="'+respuesta["ficha_id"]+'"]');
+                    if(fichaOption.length > 0){
+                        $("#inputConsultarFicha").val(fichaOption.attr('value')); // código
+                        $("#descripcionConsultarFicha").val(fichaOption.attr('data-programa'));
+                        $("#divDescripcionConsultarFicha").show();
+                    } else {
+                        $("#inputConsultarFicha").val(respuesta["ficha_id"]);
+                        $("#divDescripcionConsultarFicha").hide();
+                    }
+                } else {
+                    $("#inputConsultarFicha").val("Sin ficha asignada");
+                    $("#divDescripcionConsultarFicha").hide();
+                }
+            } else {
+                $("#divConsultarFicha").hide();
+                $("#divDescripcionConsultarFicha").hide();
+                $("#inputConsultarFicha").val('');
+                $("#descripcionConsultarFicha").val('');
+            }
+        }
+    });
+});

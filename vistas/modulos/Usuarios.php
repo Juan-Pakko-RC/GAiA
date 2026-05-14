@@ -67,7 +67,7 @@
                                 echo "<td>";
                                 echo '<div class="btn-group">
                             <button class="btn btn-sm btn-outline-light btnEditarUsuario" data-idUsuario="' . $usuario["id"] . '" data-toggle="modal" data-target="#modal-editarUsuario"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-sm btn-outline-light" data-toggle="modal" data-target="#modal-consultarUsuario"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-sm btn-outline-light btnConsultarUsuario" data-idUsuario="' . $usuario["id"] . '" data-toggle="modal" data-target="#modal-consultarUsuario"><i class="fas fa-eye"></i></button>
                           </div>
                         </td>';
 
@@ -342,11 +342,72 @@ CONSULTAR USUARIO   -->
                   </button>
               </div>
               <div class="modal-body">
-                  <p>Contenido</p>
+                  <div class="form-group">
+                      <div class="row">
+                          <div class="col-md-5">
+                              <input type="text" class="form-control" id="consultarTipoDocumento" readonly>
+                          </div>
+                          <div class="input-group col-md-7">
+                              <div class="input-group-prepend">
+                                  <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                              </div>
+                              <input type="text" class="form-control" id="consultarDocumento" readonly>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="fas fa-user"></i></span>
+                      </div>
+                      <input type="text" class="form-control" id="consultarNombre" readonly>
+                  </div>
+
+                  <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="fas fa-user"></i></span>
+                      </div>
+                      <input type="text" class="form-control" id="consultarApellido" readonly>
+                  </div>
+
+                  <label for="">Fecha de nacimiento</label>
+                  <div class="input-group mb-3 date">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                      </div>
+                      <input type="date" class="form-control" id="consultarFechaNacimiento" readonly>
+                  </div>
+
+                  <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                      </div>
+                      <input type="email" class="form-control" id="consultarCorreo" readonly>
+                  </div>
+
+                  <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="fas fa-user-tag"></i></span>
+                      </div>
+                      <input type="text" class="form-control" id="consultarRol" readonly>
+                  </div>
+
+                  <div class="input-group mb-3" id="divConsultarFicha" style="display: none;">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="fas fa-list-ol"></i></span>
+                      </div>
+                      <input type="text" class="form-control" id="inputConsultarFicha" readonly>
+                  </div>
+
+                  <div class="input-group mb-3" id="divDescripcionConsultarFicha" style="display: none;">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text"><i class="fas fa-info-circle"></i></span>
+                      </div>
+                      <input type="text" class="form-control" id="descripcionConsultarFicha" readonly>
+                  </div>
               </div>
-              <div class="modal-footer justify-content-between">
+              <div class="modal-footer justify-content-end">
                   <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                  <button type="button" class="btn btn-primary">Guardar</button>
               </div>
           </div>
           <!-- /.modal-content -->
