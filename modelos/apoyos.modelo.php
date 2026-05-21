@@ -8,7 +8,7 @@ class ModeloApoyos
     static public function mdlMostrarApoyos($tabla, $item, $valor)
     {
         if ($item != null) {
-            $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE $item = :valor");
+            $stmt = Conexion::conectar()->prepare("SELECT $tabla.*, iconos.nombre AS nombre_icono FROM $tabla LEFT JOIN iconos ON $tabla.apoyo_icono COLLATE utf8mb4_unicode_ci = iconos.codigo_fa COLLATE utf8mb4_unicode_ci WHERE $tabla.$item = :valor");
             $stmt->bindParam(":valor", $valor, PDO::PARAM_STR);
             $stmt->execute();
             return $stmt->fetch();

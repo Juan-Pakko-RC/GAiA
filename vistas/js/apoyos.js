@@ -66,7 +66,11 @@ $(".tablaApoyos").on("click", ".btnEditarApoyo", function(){
             $("#idApoyo").val(respuesta["id_apoyo"]);
             $("#editarDescripcionApoyo").val(respuesta["descripcion_apoyo"]);
             $("#editarInformacionApoyo").val(respuesta["informacion_apoyo"]);
+            
+            // Nuevo selector dinámico de iconos
             $("#editarApoyoIcono").val(respuesta["apoyo_icono"]);
+            $("#nombreEditarIcono").val(respuesta["nombre_icono"]);
+            $("#previewEditarIcono").html(`<i class="${respuesta["apoyo_icono"]}"></i>`);
 
             if(respuesta["apoyo_dual"] == 1){
                 $("#editarApoyoDualSi").prop("checked", true);
@@ -97,4 +101,62 @@ $(".tablaApoyos").on("click", ".btnEliminarApoyo", function(){
             window.location = "index.php?ruta=apoyos&idApoyoEliminar="+idApoyo;
         }
     })
+});
+
+/*=============================================
+MODAL DINÁMICO DE ICONOS
+=============================================*/
+let targetPreview = "";
+let targetName = "";
+let targetHidden = "";
+let iconosCargados = false;
+
+// Al abrir el modal de iconos
+$(document).on("click", ".btnAbrirModalIconos", function(){
+    targetPreview = $(this).attr("data-target-preview");
+    targetName = $(this).attr("data-target-name");
+    targetHidden = $(this).attr("data-target-hidden");
+
+    if(!iconosCargados){
+        $.ajax({
+            url: "ajax/iconos.ajax.php",
+            method: "POST",
+            data: {cargarIconos: "ok"},
+            dataType: "json",
+            success: function(respuesta){
+                let html = "";
+                respuesta.forEach(function(icono){
+                    html += `
+                    <div class="col-3 col-md-2 text-center mb-3 item-icono" data-nombre="${icono.nombre}" data-codigo="${icono.codigo_fa}" style="cursor: pointer;">
+                        <div class="p-2 border rounded shadow-sm bg-white text-dark">
+                            <i class="${icono.codigo_fa} fa-2x"></i>
+                            <p class="mt-2 mb-0 small text-truncate" title="${icono.nombre}">${icono.nombre}</p>
+                        </div>
+                    </div>`;
+                });
+                $("#contenedorIconos").html(html);
+                iconosCargados = true;
+            }
+        });
+    }
+});
+
+// Filtro de iconos en tiempo real
+$("#buscadorIconos").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#contenedorIconos .item-icono").filter(function() {
+        $(this).toggle($(this).attr('data-nombre').toLowerCase().indexOf(value) > -1);
+    });
+});
+
+// Al seleccionar un icono
+$(document).on("click", ".item-icono", function(){
+    let codigo = $(this).attr("data-codigo");
+    let nombre = $(this).attr("data-nombre");
+
+    $("#" + targetHidden).val(codigo);
+    $("#" + targetName).val(nombre);
+    $("#" + targetPreview).html(`<i class="${codigo}"></i>`);
+
+    $("#modalIconos").modal("hide");
 });

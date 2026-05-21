@@ -150,9 +150,13 @@ MODAL AGREGAR APOYO
             <div class="form-group">
               <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-icons"></i></span>
+                    <span class="input-group-text" id="previewNuevoIcono"><i class="fas fa-icons"></i></span>
                 </div>
-                <input type="text" class="form-control input-lg" name="nuevoApoyoIcono" placeholder="Clase de FontAwesome (ej. fas fa-bus)" required>
+                <input type="text" class="form-control input-lg" id="nombreNuevoIcono" placeholder="Seleccione un icono" readonly required>
+                <input type="hidden" name="nuevoApoyoIcono" id="nuevoApoyoIcono" required>
+                <div class="input-group-append">
+                    <button class="btn btn-primary btnAbrirModalIconos" data-target-preview="previewNuevoIcono" data-target-name="nombreNuevoIcono" data-target-hidden="nuevoApoyoIcono" type="button" data-toggle="modal" data-target="#modalIconos">Buscar</button>
+                </div>
               </div>
             </div>
 
@@ -237,9 +241,13 @@ MODAL EDITAR APOYO
             <div class="form-group">
               <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="fas fa-icons"></i></span>
+                    <span class="input-group-text" id="previewEditarIcono"><i class="fas fa-icons"></i></span>
                 </div>
-                <input type="text" class="form-control input-lg" name="editarApoyoIcono" id="editarApoyoIcono" required>
+                <input type="text" class="form-control input-lg" id="nombreEditarIcono" placeholder="Seleccione un icono" readonly required>
+                <input type="hidden" name="editarApoyoIcono" id="editarApoyoIcono" required>
+                <div class="input-group-append">
+                    <button class="btn btn-primary btnAbrirModalIconos" data-target-preview="previewEditarIcono" data-target-name="nombreEditarIcono" data-target-hidden="editarApoyoIcono" type="button" data-toggle="modal" data-target="#modalIconos">Buscar</button>
+                </div>
               </div>
             </div>
 
@@ -283,6 +291,40 @@ MODAL VER MÁS INFO
       <!-- CUERPO DEL MODAL -->
       <div class="modal-body">
         <p id="textoInfoCompleta" style="text-align: justify; white-space: pre-wrap;"></p>
+      </div>
+
+      <!-- PIE DEL MODAL -->
+      <div class="modal-footer justify-content-end">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!--=====================================
+MODAL ICONOS
+======================================-->
+<div id="modalIconos" class="modal fade" role="dialog" style="z-index: 1060;">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <!-- CABEZA DEL MODAL -->
+      <div class="modal-header">
+        <h4 class="modal-title">Seleccionar Icono</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <!-- CUERPO DEL MODAL -->
+      <div class="modal-body">
+        <div class="form-group">
+            <input type="text" class="form-control" id="buscadorIconos" placeholder="Buscar icono por nombre...">
+        </div>
+        <div class="row" id="contenedorIconos" style="max-height: 400px; overflow-y: auto;">
+            <!-- Iconos cargados por AJAX -->
+        </div>
       </div>
 
       <!-- PIE DEL MODAL -->
