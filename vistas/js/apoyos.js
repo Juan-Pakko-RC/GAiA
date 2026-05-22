@@ -160,3 +160,32 @@ $(document).on("click", ".item-icono", function(){
 
     $("#modalIconos").modal("hide");
 });
+
+/*=============================================
+INSCRIBIRSE A APOYO
+=============================================*/
+$(document).on("click", ".btnAceptarApoyo", function(){
+    let idApoyo = $(this).attr("idApoyo");
+    let nombreApoyo = $(this).attr("nombreApoyo");
+
+    Swal.fire({
+        title: '¿Deseas inscribirte al apoyo?',
+        text: `Te vas a inscribir al apoyo de: ${nombreApoyo}`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#28a745',
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Sí, inscribirme!'
+    }).then(function(result){
+        if(result.value){
+            Swal.fire({
+                icon: 'success',
+                title: '¡Inscripción Exitosa!',
+                text: `Te has inscrito correctamente al apoyo de ${nombreApoyo}. La funcionalidad de inscripción completa se encuentra en desarrollo.`,
+                confirmButtonText: 'Aceptar',
+                confirmButtonColor: '#28a745'
+            });
+        }
+    });
+});
