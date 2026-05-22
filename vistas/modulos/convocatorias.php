@@ -24,17 +24,17 @@
               <div class="card-header border-0 d-flex justify-content-between align-items-center">
                   <h3 class="card-title font-weight-bold mb-0" style="font-size: 1.5rem; line-height: 2;">GESTIÓN DE CONVOCATORIAS</h3>
                   <div class="card-tools ml-auto">
-                      <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-agregarConvocatoria">
+                      <!-- Modificado para limpiar formulario si es nueva -->
+                      <button type="button" class="btn btn-success btnNuevaConvocatoria" data-toggle="modal" data-target="#modal-agregarConvocatoria">
                           <i class="fas fa-plus"></i> Nueva Convocatoria
                       </button>
                   </div>
               </div>
               <div class="card-body">
-                  <!-- Tabla (Estática temporal para visualización) -->
                   <table id="tblConvocatorias" class="table table-dark table-bordered table-striped dt-responsive nowrap" style="width:100%">
                       <thead style="background-color: #198754; color: white;">
                           <tr>
-                              <th style="width: 5%">ID</th>
+                              <th style="width: 5%">#</th>
                               <th style="width: 25%">Tipo de Apoyo</th>
                               <th style="width: 30%">Fechas (Inicio - Cierre)</th>
                               <th style="width: 10%">Cupos</th>
@@ -43,45 +43,38 @@
                           </tr>
                       </thead>
                       <tbody>
-                          <tr>
-                              <td>1</td>
-                              <td>Sostenimiento Regular</td>
-                              <td><i class="far fa-calendar-alt mr-1"></i> 2024-01-01 / 2024-12-31</td>
-                              <td>50</td>
-                              <td><span class="badge badge-primary" style="font-size: 0.9em; padding: 6px;">Abierta</span></td>
-                              <td>
-                                  <div class="btn-group">
-                                      <button class="btn btn-sm btn-outline-light"><i class="fas fa-edit"></i></button>
-                                      <button class="btn btn-sm btn-outline-light"><i class="fas fa-eye"></i></button>
-                                  </div>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td>2</td>
-                              <td>Sostenimiento FIC</td>
-                              <td><i class="far fa-calendar-alt mr-1"></i> 2024-03-01 / 2024-08-31</td>
-                              <td>20</td>
-                              <td><span class="badge badge-secondary" style="font-size: 0.9em; padding: 6px;">Guardada</span></td>
-                              <td>
-                                  <div class="btn-group">
-                                      <button class="btn btn-sm btn-outline-light"><i class="fas fa-edit"></i></button>
-                                      <button class="btn btn-sm btn-outline-light"><i class="fas fa-eye"></i></button>
-                                  </div>
-                              </td>
-                          </tr>
-                          <tr>
-                              <td>3</td>
-                              <td>Alimentación Temporal</td>
-                              <td><i class="far fa-calendar-alt mr-1"></i> 2023-01-01 / 2023-06-30</td>
-                              <td>100</td>
-                              <td><span class="badge badge-danger" style="font-size: 0.9em; padding: 6px;">Cerrada</span></td>
-                              <td>
-                                  <div class="btn-group">
-                                      <button class="btn btn-sm btn-outline-light" disabled><i class="fas fa-edit"></i></button>
-                                      <button class="btn btn-sm btn-outline-light"><i class="fas fa-eye"></i></button>
-                                  </div>
-                              </td>
-                          </tr>
+                          <?php
+                            $convocatorias = ControladorConvocatorias::ctrListarConvocatorias();
+                            foreach ($convocatorias as $key => $value) {
+                                
+                                // Obtener el nombre del apoyo desde la base de datos
+                                $itemApoyo = "id_apoyo"; // Asumiendo que la PK es id_apoyo
+                                $valorApoyo = $value["apoyo_id"];
+                                $respuestaApoyo = ControladorApoyos::ctrMostrarApoyos($itemApoyo, $valorApoyo);
+                                $nombreApoyo = $respuestaApoyo ? $respuestaApoyo["descripcion_apoyo"] : "Apoyo Desconocido";
+
+                                echo '<tr>
+                                    <td>'.($key+1).'</td>
+                                    <td>'.$nombreApoyo.'</td>
+                                    <td><i class="far fa-calendar-alt mr-1"></i> '.$value["fecha_inicio"].' / '.$value["fecha_fin"].'</td>
+                                    <td>'.$value["cupos_personas"].'</td>';
+                                
+                                if($value["estado_en_convocatoria"] == "ABIERTA"){
+                                    echo '<td><span class="badge badge-primary" style="font-size: 0.9em; padding: 6px;">Abierta</span></td>';
+                                } else if($value["estado_en_convocatoria"] == "GUARDADA"){
+                                    echo '<td><span class="badge badge-secondary" style="font-size: 0.9em; padding: 6px;">Guardada</span></td>';
+                                } else {
+                                    echo '<td><span class="badge badge-danger" style="font-size: 0.9em; padding: 6px;">Cerrada</span></td>';
+                                }
+
+                                echo '<td>
+                                        <div class="btn-group">
+                                            <button class="btn btn-sm btn-outline-light btnEditarConvocatoria" idConvocatoria="'.$value["id"].'" data-toggle="modal" data-target="#modal-agregarConvocatoria"><i class="fas fa-edit"></i></button>
+                                        </div>
+                                      </td>
+                                </tr>';
+                            }
+                          ?>
                       </tbody>
                   </table>
               </div>
@@ -90,19 +83,22 @@
   </section>
 
   <!-- ========================================================================================================
-  MODAL: AGREGAR CONVOCATORIA (Contiene el formulario de configuración)
+  MODAL: AGREGAR / EDITAR CONVOCATORIA
   ========================================================================================================= -->
 
   <div class="modal fade" id="modal-agregarConvocatoria" data-backdrop="static">
-      <div class="modal-dialog modal-xl"> <!-- modal-xl para espacio extra por el baremo -->
+      <div class="modal-dialog modal-xl">
           <div class="modal-content bg-dark text-white">
               
+              <!-- FORMULARIO ESTÁNDAR PARA CREAR/EDITAR -->
               <form id="formConvocatoria" method="POST">
-                  <!-- Estado Oculto -->
-                  <input type="hidden" name="estado_convocatoria" id="estado_convocatoria" value="">
+                  
+                  <!-- Estados y PK -->
+                  <input type="hidden" name="estado_en_convocatoria" id="estado_en_convocatoria" value="">
+                  <input type="hidden" name="id_convocatoria_editar" id="id_convocatoria_editar" value="">
 
                   <div class="modal-header" style="background-color: #343a40;">
-                      <h4 class="modal-title font-weight-bold"><i class="fas fa-clipboard-list mr-2"></i> Apertura de Convocatoria</h4>
+                      <h4 class="modal-title font-weight-bold" id="tituloModalConvocatoria"><i class="fas fa-clipboard-list mr-2"></i> Apertura de Convocatoria</h4>
                       <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">&times;</span>
                       </button>
@@ -122,10 +118,15 @@
                                       <div class="d-flex align-items-center">
                                           <select id="apoyo_id" name="apoyo_id" class="form-control" required>
                                               <option value="" disabled selected>Seleccione un apoyo...</option>
-                                              <option value="1" data-duality="false">Sostenimiento Regular</option>
-                                              <option value="2" data-duality="false">Sostenimiento FIC</option>
-                                              <option value="3" data-duality="true">Alimentación Temporal</option>
-                                              <option value="4" data-duality="true">Monitorías</option>
+                                              <?php
+                                                $apoyos = ControladorApoyos::ctrMostrarApoyos(null, null);
+                                                if($apoyos){
+                                                    foreach ($apoyos as $key => $value) {
+                                                        $duality = ($value["apoyo_dual"] == 1) ? 'true' : 'false';
+                                                        echo '<option value="'.$value["id_apoyo"].'" data-duality="'.$duality.'">'.$value["descripcion_apoyo"].'</option>';
+                                                    }
+                                                }
+                                              ?>
                                           </select>
                                           <span id="badge_duality" class="badge ml-3 d-none" style="font-size: 0.95rem; padding: 8px 12px;"></span>
                                       </div>
@@ -204,14 +205,17 @@
                           <button type="button" id="btnPublicar" class="btn btn-primary"><i class="fas fa-rocket mr-1"></i> Publicar Convocatoria</button>
                       </div>
                   </div>
+
+                  <!-- Ejecución del controlador PHP -->
+                  <?php
+                    $crearConvocatoria = new ControladorConvocatorias();
+                    $crearConvocatoria->ctrCrearConvocatoria();
+                  ?>
                   
               </form>
           </div>
-          <!-- /.modal-content -->
       </div>
-      <!-- /.modal-dialog -->
   </div>
-  <!-- /.modal -->
 
   <!-- ========================================================================================================
   TEMPLATE BAREMO (Oculto en DOM, clonado por jQuery)
@@ -224,13 +228,13 @@
                   <div class="input-group-prepend">
                       <span class="input-group-text bg-dark text-white border-0"><i class="fas fa-file-alt"></i></span>
                   </div>
-                  <input type="text" name="baremo[nombre_item][]" class="form-control" placeholder="Nombre del documento / requisito" required>
+                  <input type="text" name="baremo[nombre_item][]" class="form-control nombre-item-input" placeholder="Nombre del documento / requisito" required>
               </div>
           </div>
 
           <div class="col-md-3 mb-2 mb-md-0">
               <div class="input-group input-group-sm">
-                  <input type="number" step="0.01" name="baremo[puntaje_valor][]" class="form-control text-right" value="10.00" required>
+                  <input type="number" step="0.01" name="baremo[puntaje_valor][]" class="form-control text-right puntaje-valor-input" value="10.00" required>
                   <div class="input-group-append">
                       <span class="input-group-text bg-dark text-white border-0">pts</span>
                   </div>
@@ -239,7 +243,6 @@
 
           <div class="col-md-3 mb-2 mb-md-0 d-flex align-items-center pl-md-4">
               <div class="custom-control custom-switch custom-switch-off-danger custom-switch-on-success">
-                  <!-- Hidden input para arreglos PHP -->
                   <input type="hidden" name="baremo[es_critico][]" value="0" class="hidden-critico-input">
                   <input type="checkbox" class="custom-control-input toggle-critico" id="switch_templ">
                   <label class="custom-control-label font-weight-normal text-light" for="switch_templ">¿Es crítico?</label>

@@ -27,7 +27,7 @@ $(document).ready(function() {
     }
 
     // =============================================================================
-    // LÓGICA DEL MODAL "AGREGAR CONVOCATORIA" Y FORMULARIO BAREMO
+    // LÓGICA DEL MODAL "AGREGAR/EDITAR CONVOCATORIA" Y FORMULARIO BAREMO
     // =============================================================================
     
     let baremoCounter = 0;
@@ -58,14 +58,17 @@ $(document).ready(function() {
         }
     }
 
-    $('#btnAgregarCriterio').on('click', function() {
+    // Función principal para agregar fila al DOM
+    function addBaremoRow(nombre = "", puntaje = "10.00", critico = 0) {
         baremoCounter++;
         let templateContent = $('#baremoRowTemplate').html();
         let newRow = $(templateContent);
 
         // Arreglar IDs de switch para que funcionen los eventos del label nativos de Bootstrap
         let switchId = 'switch_' + baremoCounter;
-        newRow.find('.custom-control-input').attr('id', switchId);
+        let checkbox = newRow.find('.custom-control-input');
+        
+        checkbox.attr('id', switchId);
         newRow.find('.custom-control-label').attr('for', switchId);
 
         // Evento de toggle crítico
@@ -86,38 +89,106 @@ $(document).ready(function() {
             });
         });
 
+        // Pre-llenar datos (si viene de Editar AJAX)
+        if(nombre !== "") {
+            newRow.find('.nombre-item-input').val(nombre);
+            newRow.find('.puntaje-valor-input').val(puntaje);
+            
+            if(critico == 1 || critico == "1") {
+                checkbox.prop("checked", true);
+                newRow.find('.hidden-critico-input').val('1');
+            }
+        }
+
         // Insertar en DOM con animacion
         newRow.hide();
         $('#baremoContainer').append(newRow);
         newRow.fadeIn(250);
         checkEmptyState();
+    }
+
+    $('#btnAgregarCriterio').on('click', function() {
+        addBaremoRow();
     });
 
-    // Añadir el primer criterio por defecto cuando se abra el modal
-    // Utilizamos el evento show.bs.modal de Bootstrap para prepararlo
-    $('#modal-agregarConvocatoria').on('show.bs.modal', function (e) {
-        if ($('#baremoContainer').children().length === 0) {
-            $('#btnAgregarCriterio').click();
-        }
+
+    // =============================================================================
+    // BOTÓN NUEVA CONVOCATORIA (Resetear Formulario)
+    // =============================================================================
+    $('.btnNuevaConvocatoria').on('click', function() {
+        // Limpiamos todo rastro de ediciones previas
+        $('#id_convocatoria_editar').val('');
+        $('#estado_en_convocatoria').val('');
+        $('#formConvocatoria')[0].reset();
+        $('#baremoContainer').empty();
+        
+        $('#tituloModalConvocatoria').html('<i class="fas fa-clipboard-list mr-2"></i> Apertura de Convocatoria');
+        $('#badge_duality').addClass('d-none');
+        
+        // Agregar un requisito vacío por defecto al limpiar (luego de un pequeño retraso para que limpie bien)
+        setTimeout(() => {
+            if ($('#baremoContainer').children().length === 0) {
+                $('#btnAgregarCriterio').click();
+            }
+        }, 100);
     });
 
-    // 3. Control de Estados y Submit (Botones de Guardar Borrador y Publicar)
+    // =============================================================================
+    // BOTÓN EDITAR CONVOCATORIA (Petición AJAX)
+    // =============================================================================
+    $('#tblConvocatorias tbody').on('click', 'button.btnEditarConvocatoria', function() {
+        let idConvocatoria = $(this).attr("idConvocatoria");
+        
+        // Limpiamos el form primero
+        $('#formConvocatoria')[0].reset();
+        $('#baremoContainer').empty();
+        $('#tituloModalConvocatoria').html('<i class="fas fa-edit mr-2"></i> Editar Convocatoria');
+        
+        let datos = new FormData();
+        datos.append("idConvocatoria", idConvocatoria);
+
+        $.ajax({
+            url: "ajax/convocatorias.ajax.php",
+            method: "POST",
+            data: datos,
+            cache: false,
+            contentType: false,
+            processData: false,
+            dataType: "json",
+            success: function(respuesta) {
+                
+                // Rellenar cabecera
+                $('#id_convocatoria_editar').val(respuesta.convocatoria.id);
+                $('#apoyo_id').val(respuesta.convocatoria.apoyo_id).trigger('change');
+                $('#fecha_inicio').val(respuesta.convocatoria.fecha_inicio);
+                $('#fecha_fin').val(respuesta.convocatoria.fecha_fin);
+                $('#cupos_personas').val(respuesta.convocatoria.cupos_personas);
+                $('#duracion_meses').val(respuesta.convocatoria.duracion_meses);
+                $('#estado_en_convocatoria').val(respuesta.convocatoria.estado_en_convocatoria);
+                
+                // Rellenar filas de baremo_config dinámicamente
+                if(respuesta.baremo && respuesta.baremo.length > 0) {
+                    respuesta.baremo.forEach(function(item) {
+                        addBaremoRow(item.nombre_item, item.puntaje_valor, item.es_critico);
+                    });
+                } else {
+                    checkEmptyState();
+                }
+            },
+            error: function(err) {
+                console.error("Error trayendo datos AJAX", err);
+            }
+        });
+    });
+
+    // =============================================================================
+    // CONTROL DE ESTADOS Y SUBMIT (Guardar Borrador y Publicar)
+    // =============================================================================
     $('#btnBorrador').on('click', function() {
         let form = $('#formConvocatoria')[0];
         if (form.checkValidity()) {
-            $('#estado_convocatoria').val('CONFIGURACION');
-            
-            // Logica temporal para vista (maquetación)
-            Swal.fire({
-                position: 'top-end',
-                icon: 'success',
-                title: 'Borrador Guardado',
-                showConfirmButton: false,
-                timer: 1500
-            });
-            $('#modal-agregarConvocatoria').modal('hide');
-            // En backend real: form.submit();
-            
+            $('#estado_en_convocatoria').val('GUARDADA');
+            form.submit(); // Llama al Controlador PHP
         } else {
             form.reportValidity();
         }
@@ -146,16 +217,8 @@ $(document).ready(function() {
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    $('#estado_convocatoria').val('ABIERTA');
-                    
-                    // Logica temporal para vista (maquetación)
-                    Swal.fire(
-                      'Publicada!',
-                      'La convocatoria ha sido abierta exitosamente.',
-                      'success'
-                    )
-                    $('#modal-agregarConvocatoria').modal('hide');
-                    // En backend real: form.submit();
+                    $('#estado_en_convocatoria').val('ABIERTA');
+                    form.submit(); // Llama al Controlador PHP
                 }
             });
         } else {
