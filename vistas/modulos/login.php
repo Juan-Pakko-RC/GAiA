@@ -71,7 +71,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="" method="post">
+                <form action="" method="post" enctype="multipart/form-data">
                     
                     <input type="hidden" name="nuevoRol" value="Aprendiz">
 
@@ -122,6 +122,13 @@
                             <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                         </div>
                         <input type="email" class="form-control" name="nuevoCorreo" placeholder="Correo" required>
+                    </div>
+
+                    <!-- FOTO -->
+                    <div class="form-group">
+                        <div class="panel">SUBIR FOTO</div>
+                        <input type="file" class="nuevaFoto" name="nuevaFoto">
+                        <p class="help-block">Peso máximo de la foto 4MB (Formatos: JPG o PNG)</p>
                     </div>
 
                     <div class="input-group mb-3" id="divFicha">

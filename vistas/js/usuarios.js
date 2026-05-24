@@ -134,6 +134,16 @@ $(document).on("click", ".btnEditarUsuario", function() {
             });
 
             $("#passwordActual").val(respuesta["password"]);
+            $("#fotoActualEditar").val(respuesta["foto"]);
+
+            // Mostrar opcion de eliminar foto si no es la por defecto
+            if(respuesta["foto"] != "" && respuesta["foto"] != "documentos/anonimo/anonimo.png" && respuesta["foto"] != null){
+                $("#divEliminarFoto").show();
+                $("#eliminarFotoUsuario").prop("checked", false);
+            } else {
+                $("#divEliminarFoto").hide();
+                $("#eliminarFotoUsuario").prop("checked", false);
+            }
 
             // Lógica para Aprendiz
             if(respuesta["rol"] === "Aprendiz" || respuesta["rol"] === "APRENDIZ"){

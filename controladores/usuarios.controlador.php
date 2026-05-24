@@ -31,6 +31,7 @@ class ControladorUsuarios{
                             $_SESSION["apellidos"] = $respuesta["apellidos"];
                             $_SESSION["rol"] = $respuesta["rol"];
                             $_SESSION["ficha_id"] = $respuesta["ficha_id"];
+                            $_SESSION["foto"] = $respuesta["foto"];
                             echo "<script>window.location = 'inicio';</script>";
                         } else{
                         // var_dump($respuesta);
@@ -114,6 +115,76 @@ class ControladorUsuarios{
                     $fichaId = $_POST["nuevaFicha"];
                 }
 
+                // ==========================================
+                // VALIDAR IMAGEN
+                // ==========================================
+                $ruta = "documentos/anonimo/anonimo.png";
+
+                if(isset($_FILES["nuevaFoto"]["tmp_name"]) && !empty($_FILES["nuevaFoto"]["tmp_name"])){
+                    
+                    list($ancho, $alto) = getimagesize($_FILES["nuevaFoto"]["tmp_name"]);
+                    $nuevoAncho = 500;
+                    $nuevoAlto = 500;
+
+                    $directorio = "documentos/".$_POST["nuevoDocumento"];
+                    
+                    if(!is_dir($directorio)){
+                        mkdir($directorio, 0755, true);
+                    }
+
+                    if($_FILES["nuevaFoto"]["type"] == "image/jpeg" || $_FILES["nuevaFoto"]["type"] == "image/png"){
+                        
+                        if($_FILES["nuevaFoto"]["size"] <= 4194304){ // 4MB MAX
+
+                            if($_FILES["nuevaFoto"]["type"] == "image/jpeg"){
+                                $aleatorio = mt_rand(100,999);
+                                $ruta = $directorio."/".$aleatorio.".jpg";
+                                $origen = imagecreatefromjpeg($_FILES["nuevaFoto"]["tmp_name"]);
+                                $destino = imagecreatetruecolor($nuevoAncho, $nuevoAlto);
+                                imagecopyresized($destino, $origen, 0, 0, 0, 0, $nuevoAncho, $nuevoAlto, $ancho, $alto);
+                                imagejpeg($destino, $ruta);
+                            }
+
+                            if($_FILES["nuevaFoto"]["type"] == "image/png"){
+                                $aleatorio = mt_rand(100,999);
+                                $ruta = $directorio."/".$aleatorio.".png";
+                                $origen = imagecreatefrompng($_FILES["nuevaFoto"]["tmp_name"]);
+                                $destino = imagecreatetruecolor($nuevoAncho, $nuevoAlto);
+                                imagealphablending($destino, false);
+                                imagesavealpha($destino, true);
+                                $transparent = imagecolorallocatealpha($destino, 255, 255, 255, 127);
+                                imagefilledrectangle($destino, 0, 0, $nuevoAncho, $nuevoAlto, $transparent);
+                                imagecopyresized($destino, $origen, 0, 0, 0, 0, $nuevoAncho, $nuevoAlto, $ancho, $alto);
+                                imagepng($destino, $ruta);
+                            }
+
+                        } else {
+                            echo "<script>
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: '¡Error al subir la imagen!',
+                                    text: 'La imagen no debe pesar más de 4MB',
+                                    showConfirmButton: true,
+                                    confirmButtonText: 'Cerrar'
+                                });
+                            </script>";
+                            return;
+                        }
+
+                    } else {
+                        echo "<script>
+                            Swal.fire({
+                                icon: 'error',
+                                title: '¡Error al subir la imagen!',
+                                text: 'La imagen debe estar en formato JPG o PNG',
+                                showConfirmButton: true,
+                                confirmButtonText: 'Cerrar'
+                            });
+                        </script>";
+                        return;
+                    }
+                }
+
                 $datos = array(
                   "tipoDocumento" => $_POST["nuevoTipoDocumento"],
                   "documentoId" => $_POST["nuevoDocumento"],
@@ -123,7 +194,8 @@ class ControladorUsuarios{
                   "fechaNacimiento" => $_POST["nuevoFechaNacimiento"],
                   "rol" => $_POST["nuevoRol"],
                   "password"=> $passEncriptado,
-                  "ficha_id" => $fichaId
+                  "ficha_id" => $fichaId,
+                  "foto" => $ruta
                 );
                 $respuesta= ModeloUsuarios::mdlAgregarUsuario($tabla, $datos);
 
@@ -182,6 +254,76 @@ class ControladorUsuarios{
                     $fichaId = $_POST["nuevaFicha"];
                 }
 
+                // ==========================================
+                // VALIDAR IMAGEN
+                // ==========================================
+                $ruta = "documentos/anonimo/anonimo.png";
+
+                if(isset($_FILES["nuevaFoto"]["tmp_name"]) && !empty($_FILES["nuevaFoto"]["tmp_name"])){
+                    
+                    list($ancho, $alto) = getimagesize($_FILES["nuevaFoto"]["tmp_name"]);
+                    $nuevoAncho = 500;
+                    $nuevoAlto = 500;
+
+                    $directorio = "documentos/".$_POST["nuevoDocumento"];
+                    
+                    if(!is_dir($directorio)){
+                        mkdir($directorio, 0755, true);
+                    }
+
+                    if($_FILES["nuevaFoto"]["type"] == "image/jpeg" || $_FILES["nuevaFoto"]["type"] == "image/png"){
+                        
+                        if($_FILES["nuevaFoto"]["size"] <= 4194304){ // 4MB MAX
+
+                            if($_FILES["nuevaFoto"]["type"] == "image/jpeg"){
+                                $aleatorio = mt_rand(100,999);
+                                $ruta = $directorio."/".$aleatorio.".jpg";
+                                $origen = imagecreatefromjpeg($_FILES["nuevaFoto"]["tmp_name"]);
+                                $destino = imagecreatetruecolor($nuevoAncho, $nuevoAlto);
+                                imagecopyresized($destino, $origen, 0, 0, 0, 0, $nuevoAncho, $nuevoAlto, $ancho, $alto);
+                                imagejpeg($destino, $ruta);
+                            }
+
+                            if($_FILES["nuevaFoto"]["type"] == "image/png"){
+                                $aleatorio = mt_rand(100,999);
+                                $ruta = $directorio."/".$aleatorio.".png";
+                                $origen = imagecreatefrompng($_FILES["nuevaFoto"]["tmp_name"]);
+                                $destino = imagecreatetruecolor($nuevoAncho, $nuevoAlto);
+                                imagealphablending($destino, false);
+                                imagesavealpha($destino, true);
+                                $transparent = imagecolorallocatealpha($destino, 255, 255, 255, 127);
+                                imagefilledrectangle($destino, 0, 0, $nuevoAncho, $nuevoAlto, $transparent);
+                                imagecopyresized($destino, $origen, 0, 0, 0, 0, $nuevoAncho, $nuevoAlto, $ancho, $alto);
+                                imagepng($destino, $ruta);
+                            }
+
+                        } else {
+                            echo "<script>
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: '¡Error al subir la imagen!',
+                                    text: 'La imagen no debe pesar más de 4MB',
+                                    showConfirmButton: true,
+                                    confirmButtonText: 'Cerrar'
+                                });
+                            </script>";
+                            return;
+                        }
+
+                    } else {
+                        echo "<script>
+                            Swal.fire({
+                                icon: 'error',
+                                title: '¡Error al subir la imagen!',
+                                text: 'La imagen debe estar en formato JPG o PNG',
+                                showConfirmButton: true,
+                                confirmButtonText: 'Cerrar'
+                            });
+                        </script>";
+                        return;
+                    }
+                }
+
                 $datos = array(
                   "tipoDocumento" => $_POST["nuevoTipoDocumento"],
                   "documentoId" => $_POST["nuevoDocumento"],
@@ -191,7 +333,8 @@ class ControladorUsuarios{
                   "fechaNacimiento" => $_POST["nuevoFechaNacimiento"],
                   "rol" => $_POST["nuevoRol"],
                   "password"=> $passEncriptado,
-                  "ficha_id" => $fichaId
+                  "ficha_id" => $fichaId,
+                  "foto" => $ruta
                 );
                 $respuesta= ModeloUsuarios::mdlAgregarUsuario($tabla, $datos);
 
@@ -264,6 +407,17 @@ class ControladorUsuarios{
                     $fichaId = $_POST["editarFicha"];
                 }
 
+                $foto = $_POST["fotoActualEditar"];
+                if(isset($_POST["eliminarFotoUsuario"]) && $_POST["eliminarFotoUsuario"] == "si"){
+                    $foto = "documentos/anonimo/anonimo.png";
+                    // if photo is physical file we could unlink it here:
+                    if($_POST["fotoActualEditar"] != "" && $_POST["fotoActualEditar"] != "documentos/anonimo/anonimo.png"){
+                        if(file_exists($_POST["fotoActualEditar"])){
+                            unlink($_POST["fotoActualEditar"]);
+                        }
+                    }
+                }
+
                 $datos = array(
                     "id" => $_POST["idUsuarioEditar"],
                     "tipoDocumento" => $_POST["editarTipoDocumento"],
@@ -274,7 +428,8 @@ class ControladorUsuarios{
                     "fechaNacimiento" => $_POST["editarFechaNacimiento"],
                     "rol" => $_POST["editarRol"],
                     "password" => $passEncriptado,
-                    "ficha_id" => $fichaId
+                    "ficha_id" => $fichaId,
+                    "foto" => $foto
                 );
 
                 $respuesta = ModeloUsuarios::mdlEditarUsuario($tabla, $datos);
@@ -297,6 +452,165 @@ class ControladorUsuarios{
                         Swal.fire({
                             icon: 'error',
                             title: '¡Error al editar el usuario!',
+                            showConfirmButton: true,
+                            confirmButtonText: 'Cerrar'
+                        });
+                    </script>";
+                }
+            } else {
+                echo "<script>
+                    Swal.fire({
+                        icon: 'error',
+                        title: '¡El nombre o apellidos no pueden ir vacíos o llevar caracteres especiales!',
+                        showConfirmButton: true,
+                        confirmButtonText: 'Cerrar'
+                    });
+                </script>";
+            }
+        }
+    }
+
+    // ************************************
+    // EDITAR PERFIL
+    // ************************************
+    public function ctrEditarPerfil(){
+        if (isset($_POST["idPerfil"]) && isset($_POST["editarNombrePerfil"])) {
+            if (
+                preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚÑñ ]+$/', $_POST["editarNombrePerfil"]) &&
+                preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚÑñ ]+$/', $_POST["editarApellidoPerfil"])
+            ) {
+                $tabla = "usuarios";
+
+                if ($_POST["editarPasswordPerfil"] != "") {
+                    if (preg_match('/^[a-zA-Z0-9]+$/', $_POST["editarPasswordPerfil"])) {
+                        $passEncriptado = crypt($_POST["editarPasswordPerfil"], '$2a$07$asdfsdvafdsgf04sdfsadfGAiADeveloper$');
+                    } else {
+                        echo "<script>
+                            Swal.fire({
+                                icon: 'error',
+                                title: '¡La contraseña no puede llevar caracteres especiales!',
+                                showConfirmButton: true,
+                                confirmButtonText: 'Cerrar'
+                            });
+                        </script>";
+                        return;
+                    }
+                } else {
+                    // we need to get current password from DB or assume it's kept. 
+                    // To do this we can fetch current user:
+                    $usuarioDB = ModeloUsuarios::mdlMostrarUsuarios("usuarios", "id", $_POST["idPerfil"]);
+                    $passEncriptado = $usuarioDB["password"];
+                }
+
+                $ruta = $_POST["fotoActual"];
+
+                if(isset($_FILES["editarFotoPerfil"]["tmp_name"]) && !empty($_FILES["editarFotoPerfil"]["tmp_name"])){
+                    
+                    list($ancho, $alto) = getimagesize($_FILES["editarFotoPerfil"]["tmp_name"]);
+                    $nuevoAncho = 500;
+                    $nuevoAlto = 500;
+
+                    $directorio = "documentos/".$_POST["documentoPerfil"];
+                    
+                    if(!is_dir($directorio)){
+                        mkdir($directorio, 0755, true);
+                    }
+
+                    if($_FILES["editarFotoPerfil"]["type"] == "image/jpeg" || $_FILES["editarFotoPerfil"]["type"] == "image/png"){
+                        
+                        if($_FILES["editarFotoPerfil"]["size"] <= 4194304){ // 4MB MAX
+
+                            // Delete previous photo if it's not anonimo
+                            if($_POST["fotoActual"] != "" && $_POST["fotoActual"] != "documentos/anonimo/anonimo.png"){
+                                if(file_exists($_POST["fotoActual"])){
+                                    unlink($_POST["fotoActual"]);
+                                }
+                            }
+
+                            if($_FILES["editarFotoPerfil"]["type"] == "image/jpeg"){
+                                $aleatorio = mt_rand(100,999);
+                                $ruta = $directorio."/".$aleatorio.".jpg";
+                                $origen = imagecreatefromjpeg($_FILES["editarFotoPerfil"]["tmp_name"]);
+                                $destino = imagecreatetruecolor($nuevoAncho, $nuevoAlto);
+                                imagecopyresized($destino, $origen, 0, 0, 0, 0, $nuevoAncho, $nuevoAlto, $ancho, $alto);
+                                imagejpeg($destino, $ruta);
+                            }
+
+                            if($_FILES["editarFotoPerfil"]["type"] == "image/png"){
+                                $aleatorio = mt_rand(100,999);
+                                $ruta = $directorio."/".$aleatorio.".png";
+                                $origen = imagecreatefrompng($_FILES["editarFotoPerfil"]["tmp_name"]);
+                                $destino = imagecreatetruecolor($nuevoAncho, $nuevoAlto);
+                                imagealphablending($destino, false);
+                                imagesavealpha($destino, true);
+                                $transparent = imagecolorallocatealpha($destino, 255, 255, 255, 127);
+                                imagefilledrectangle($destino, 0, 0, $nuevoAncho, $nuevoAlto, $transparent);
+                                imagecopyresized($destino, $origen, 0, 0, 0, 0, $nuevoAncho, $nuevoAlto, $ancho, $alto);
+                                imagepng($destino, $ruta);
+                            }
+
+                        } else {
+                            echo "<script>
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: '¡Error al subir la imagen!',
+                                    text: 'La imagen no debe pesar más de 4MB',
+                                    showConfirmButton: true,
+                                    confirmButtonText: 'Cerrar'
+                                });
+                            </script>";
+                            return;
+                        }
+
+                    } else {
+                        echo "<script>
+                            Swal.fire({
+                                icon: 'error',
+                                title: '¡Error al subir la imagen!',
+                                text: 'La imagen debe estar en formato JPG o PNG',
+                                showConfirmButton: true,
+                                confirmButtonText: 'Cerrar'
+                            });
+                        </script>";
+                        return;
+                    }
+                }
+
+
+                $datos = array(
+                    "id" => $_POST["idPerfil"],
+                    "nombres" => $_POST["editarNombrePerfil"],
+                    "apellidos" => $_POST["editarApellidoPerfil"],
+                    "password" => $passEncriptado,
+                    "foto" => $ruta
+                );
+
+                $respuesta = ModeloUsuarios::mdlEditarPerfil($tabla, $datos);
+
+                if ($respuesta == "ok") {
+                    
+                    // Actualizar variables de sesion
+                    $_SESSION["nombres"] = $_POST["editarNombrePerfil"];
+                    $_SESSION["apellidos"] = $_POST["editarApellidoPerfil"];
+                    $_SESSION["foto"] = $ruta;
+
+                    echo "<script>
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Perfil actualizado correctamente',
+                            showConfirmButton: true,
+                            confirmButtonText: 'Aceptar'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location = 'inicio';
+                            }
+                        });
+                    </script>";
+                } else {
+                    echo "<script>
+                        Swal.fire({
+                            icon: 'error',
+                            title: '¡Error al editar el perfil!',
                             showConfirmButton: true,
                             confirmButtonText: 'Cerrar'
                         });
