@@ -118,72 +118,7 @@ class ControladorUsuarios{
                 // ==========================================
                 // VALIDAR IMAGEN
                 // ==========================================
-                $ruta = "documentos/anonimo/anonimo.png";
-
-                if(isset($_FILES["nuevaFoto"]["tmp_name"]) && !empty($_FILES["nuevaFoto"]["tmp_name"])){
-                    
-                    list($ancho, $alto) = getimagesize($_FILES["nuevaFoto"]["tmp_name"]);
-                    $nuevoAncho = 500;
-                    $nuevoAlto = 500;
-
-                    $directorio = "documentos/".$_POST["nuevoDocumento"];
-                    
-                    if(!is_dir($directorio)){
-                        mkdir($directorio, 0755, true);
-                    }
-
-                    if($_FILES["nuevaFoto"]["type"] == "image/jpeg" || $_FILES["nuevaFoto"]["type"] == "image/png"){
-                        
-                        if($_FILES["nuevaFoto"]["size"] <= 4194304){ // 4MB MAX
-
-                            if($_FILES["nuevaFoto"]["type"] == "image/jpeg"){
-                                $aleatorio = mt_rand(100,999);
-                                $ruta = $directorio."/".$aleatorio.".jpg";
-                                $origen = imagecreatefromjpeg($_FILES["nuevaFoto"]["tmp_name"]);
-                                $destino = imagecreatetruecolor($nuevoAncho, $nuevoAlto);
-                                imagecopyresized($destino, $origen, 0, 0, 0, 0, $nuevoAncho, $nuevoAlto, $ancho, $alto);
-                                imagejpeg($destino, $ruta);
-                            }
-
-                            if($_FILES["nuevaFoto"]["type"] == "image/png"){
-                                $aleatorio = mt_rand(100,999);
-                                $ruta = $directorio."/".$aleatorio.".png";
-                                $origen = imagecreatefrompng($_FILES["nuevaFoto"]["tmp_name"]);
-                                $destino = imagecreatetruecolor($nuevoAncho, $nuevoAlto);
-                                imagealphablending($destino, false);
-                                imagesavealpha($destino, true);
-                                $transparent = imagecolorallocatealpha($destino, 255, 255, 255, 127);
-                                imagefilledrectangle($destino, 0, 0, $nuevoAncho, $nuevoAlto, $transparent);
-                                imagecopyresized($destino, $origen, 0, 0, 0, 0, $nuevoAncho, $nuevoAlto, $ancho, $alto);
-                                imagepng($destino, $ruta);
-                            }
-
-                        } else {
-                            echo "<script>
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: '¡Error al subir la imagen!',
-                                    text: 'La imagen no debe pesar más de 4MB',
-                                    showConfirmButton: true,
-                                    confirmButtonText: 'Cerrar'
-                                });
-                            </script>";
-                            return;
-                        }
-
-                    } else {
-                        echo "<script>
-                            Swal.fire({
-                                icon: 'error',
-                                title: '¡Error al subir la imagen!',
-                                text: 'La imagen debe estar en formato JPG o PNG',
-                                showConfirmButton: true,
-                                confirmButtonText: 'Cerrar'
-                            });
-                        </script>";
-                        return;
-                    }
-                }
+                $ruta = self::procesarSubidaFoto($_FILES["nuevaFoto"], $_POST["nuevoDocumento"]);
 
                 $datos = array(
                   "tipoDocumento" => $_POST["nuevoTipoDocumento"],
@@ -257,72 +192,7 @@ class ControladorUsuarios{
                 // ==========================================
                 // VALIDAR IMAGEN
                 // ==========================================
-                $ruta = "documentos/anonimo/anonimo.png";
-
-                if(isset($_FILES["nuevaFoto"]["tmp_name"]) && !empty($_FILES["nuevaFoto"]["tmp_name"])){
-                    
-                    list($ancho, $alto) = getimagesize($_FILES["nuevaFoto"]["tmp_name"]);
-                    $nuevoAncho = 500;
-                    $nuevoAlto = 500;
-
-                    $directorio = "documentos/".$_POST["nuevoDocumento"];
-                    
-                    if(!is_dir($directorio)){
-                        mkdir($directorio, 0755, true);
-                    }
-
-                    if($_FILES["nuevaFoto"]["type"] == "image/jpeg" || $_FILES["nuevaFoto"]["type"] == "image/png"){
-                        
-                        if($_FILES["nuevaFoto"]["size"] <= 4194304){ // 4MB MAX
-
-                            if($_FILES["nuevaFoto"]["type"] == "image/jpeg"){
-                                $aleatorio = mt_rand(100,999);
-                                $ruta = $directorio."/".$aleatorio.".jpg";
-                                $origen = imagecreatefromjpeg($_FILES["nuevaFoto"]["tmp_name"]);
-                                $destino = imagecreatetruecolor($nuevoAncho, $nuevoAlto);
-                                imagecopyresized($destino, $origen, 0, 0, 0, 0, $nuevoAncho, $nuevoAlto, $ancho, $alto);
-                                imagejpeg($destino, $ruta);
-                            }
-
-                            if($_FILES["nuevaFoto"]["type"] == "image/png"){
-                                $aleatorio = mt_rand(100,999);
-                                $ruta = $directorio."/".$aleatorio.".png";
-                                $origen = imagecreatefrompng($_FILES["nuevaFoto"]["tmp_name"]);
-                                $destino = imagecreatetruecolor($nuevoAncho, $nuevoAlto);
-                                imagealphablending($destino, false);
-                                imagesavealpha($destino, true);
-                                $transparent = imagecolorallocatealpha($destino, 255, 255, 255, 127);
-                                imagefilledrectangle($destino, 0, 0, $nuevoAncho, $nuevoAlto, $transparent);
-                                imagecopyresized($destino, $origen, 0, 0, 0, 0, $nuevoAncho, $nuevoAlto, $ancho, $alto);
-                                imagepng($destino, $ruta);
-                            }
-
-                        } else {
-                            echo "<script>
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: '¡Error al subir la imagen!',
-                                    text: 'La imagen no debe pesar más de 4MB',
-                                    showConfirmButton: true,
-                                    confirmButtonText: 'Cerrar'
-                                });
-                            </script>";
-                            return;
-                        }
-
-                    } else {
-                        echo "<script>
-                            Swal.fire({
-                                icon: 'error',
-                                title: '¡Error al subir la imagen!',
-                                text: 'La imagen debe estar en formato JPG o PNG',
-                                showConfirmButton: true,
-                                confirmButtonText: 'Cerrar'
-                            });
-                        </script>";
-                        return;
-                    }
-                }
+                $ruta = self::procesarSubidaFoto($_FILES["nuevaFoto"], $_POST["nuevoDocumento"]);
 
                 $datos = array(
                   "tipoDocumento" => $_POST["nuevoTipoDocumento"],
@@ -408,11 +278,13 @@ class ControladorUsuarios{
                 }
 
                 $foto = $_POST["fotoActualEditar"];
-                if(isset($_POST["eliminarFotoUsuario"]) && $_POST["eliminarFotoUsuario"] == "si"){
+
+                if (isset($_FILES["editarFoto"]["tmp_name"]) && !empty($_FILES["editarFoto"]["tmp_name"])) {
+                    $foto = self::procesarSubidaFoto($_FILES["editarFoto"], $_POST["editarDocumento"], $_POST["fotoActualEditar"]);
+                } else if (isset($_POST["eliminarFotoUsuario"]) && $_POST["eliminarFotoUsuario"] == "si") {
                     $foto = "documentos/anonimo/anonimo.png";
-                    // if photo is physical file we could unlink it here:
-                    if($_POST["fotoActualEditar"] != "" && $_POST["fotoActualEditar"] != "documentos/anonimo/anonimo.png"){
-                        if(file_exists($_POST["fotoActualEditar"])){
+                    if ($_POST["fotoActualEditar"] != "" && $_POST["fotoActualEditar"] != "documentos/anonimo/anonimo.png") {
+                        if (file_exists($_POST["fotoActualEditar"])) {
                             unlink($_POST["fotoActualEditar"]);
                         }
                     }
@@ -504,76 +376,8 @@ class ControladorUsuarios{
 
                 $ruta = $_POST["fotoActual"];
 
-                if(isset($_FILES["editarFotoPerfil"]["tmp_name"]) && !empty($_FILES["editarFotoPerfil"]["tmp_name"])){
-                    
-                    list($ancho, $alto) = getimagesize($_FILES["editarFotoPerfil"]["tmp_name"]);
-                    $nuevoAncho = 500;
-                    $nuevoAlto = 500;
-
-                    $directorio = "documentos/".$_POST["documentoPerfil"];
-                    
-                    if(!is_dir($directorio)){
-                        mkdir($directorio, 0755, true);
-                    }
-
-                    if($_FILES["editarFotoPerfil"]["type"] == "image/jpeg" || $_FILES["editarFotoPerfil"]["type"] == "image/png"){
-                        
-                        if($_FILES["editarFotoPerfil"]["size"] <= 4194304){ // 4MB MAX
-
-                            // Delete previous photo if it's not anonimo
-                            if($_POST["fotoActual"] != "" && $_POST["fotoActual"] != "documentos/anonimo/anonimo.png"){
-                                if(file_exists($_POST["fotoActual"])){
-                                    unlink($_POST["fotoActual"]);
-                                }
-                            }
-
-                            if($_FILES["editarFotoPerfil"]["type"] == "image/jpeg"){
-                                $aleatorio = mt_rand(100,999);
-                                $ruta = $directorio."/".$aleatorio.".jpg";
-                                $origen = imagecreatefromjpeg($_FILES["editarFotoPerfil"]["tmp_name"]);
-                                $destino = imagecreatetruecolor($nuevoAncho, $nuevoAlto);
-                                imagecopyresized($destino, $origen, 0, 0, 0, 0, $nuevoAncho, $nuevoAlto, $ancho, $alto);
-                                imagejpeg($destino, $ruta);
-                            }
-
-                            if($_FILES["editarFotoPerfil"]["type"] == "image/png"){
-                                $aleatorio = mt_rand(100,999);
-                                $ruta = $directorio."/".$aleatorio.".png";
-                                $origen = imagecreatefrompng($_FILES["editarFotoPerfil"]["tmp_name"]);
-                                $destino = imagecreatetruecolor($nuevoAncho, $nuevoAlto);
-                                imagealphablending($destino, false);
-                                imagesavealpha($destino, true);
-                                $transparent = imagecolorallocatealpha($destino, 255, 255, 255, 127);
-                                imagefilledrectangle($destino, 0, 0, $nuevoAncho, $nuevoAlto, $transparent);
-                                imagecopyresized($destino, $origen, 0, 0, 0, 0, $nuevoAncho, $nuevoAlto, $ancho, $alto);
-                                imagepng($destino, $ruta);
-                            }
-
-                        } else {
-                            echo "<script>
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: '¡Error al subir la imagen!',
-                                    text: 'La imagen no debe pesar más de 4MB',
-                                    showConfirmButton: true,
-                                    confirmButtonText: 'Cerrar'
-                                });
-                            </script>";
-                            return;
-                        }
-
-                    } else {
-                        echo "<script>
-                            Swal.fire({
-                                icon: 'error',
-                                title: '¡Error al subir la imagen!',
-                                text: 'La imagen debe estar en formato JPG o PNG',
-                                showConfirmButton: true,
-                                confirmButtonText: 'Cerrar'
-                            });
-                        </script>";
-                        return;
-                    }
+                if (isset($_FILES["editarFotoPerfil"]["tmp_name"]) && !empty($_FILES["editarFotoPerfil"]["tmp_name"])) {
+                    $ruta = self::procesarSubidaFoto($_FILES["editarFotoPerfil"], $_POST["documentoPerfil"], $_POST["fotoActual"]);
                 }
 
 
@@ -638,5 +442,93 @@ class ControladorUsuarios{
         $respuesta = ModeloUsuarios::mdlCambiarEstadoUsuario($tabla, $idUsuario, $estado);
         return $respuesta;
     }   
+
+    /**
+     * Procesa la subida de una foto de usuario, aplicando redimensión si GD está habilitado,
+     * o guardando el archivo directamente como fallback.
+     */
+    private static function procesarSubidaFoto($fileInput, $documentoId, $fotoActual = null) {
+        $ruta = !empty($fotoActual) ? $fotoActual : "documentos/anonimo/anonimo.png";
+
+        if (isset($fileInput["tmp_name"]) && !empty($fileInput["tmp_name"])) {
+            $directorio = "documentos/" . $documentoId;
+            if (!is_dir($directorio)) {
+                mkdir($directorio, 0755, true);
+            }
+
+            // Validar formato
+            if ($fileInput["type"] == "image/jpeg" || $fileInput["type"] == "image/png" || $fileInput["type"] == "image/jpg") {
+                // Validar peso (4MB max)
+                if ($fileInput["size"] <= 4194304) {
+
+                    // Eliminar foto anterior si no es la anónima por defecto
+                    if (!empty($fotoActual) && $fotoActual != "documentos/anonimo/anonimo.png") {
+                        if (file_exists($fotoActual)) {
+                            unlink($fotoActual);
+                        }
+                    }
+
+                    $extension = ($fileInput["type"] == "image/png") ? ".png" : ".jpg";
+                    $aleatorio = mt_rand(100, 999);
+                    $rutaNueva = $directorio . "/" . $aleatorio . $extension;
+
+                    // Fallback si la librería GD no está activa
+                    if (!extension_loaded('gd') || !function_exists('imagecreatefromjpeg')) {
+                        if (move_uploaded_file($fileInput["tmp_name"], $rutaNueva)) {
+                            $ruta = $rutaNueva;
+                        }
+                    } else {
+                        // Procesar con GD (redimensionar a 500x500)
+                        list($ancho, $alto) = getimagesize($fileInput["tmp_name"]);
+                        $nuevoAncho = 500;
+                        $nuevoAlto = 500;
+                        $destino = imagecreatetruecolor($nuevoAncho, $nuevoAlto);
+
+                        if ($fileInput["type"] == "image/png") {
+                            $origen = imagecreatefrompng($fileInput["tmp_name"]);
+                            imagealphablending($destino, false);
+                            imagesavealpha($destino, true);
+                            $transparent = imagecolorallocatealpha($destino, 255, 255, 255, 127);
+                            imagefilledrectangle($destino, 0, 0, $nuevoAncho, $nuevoAlto, $transparent);
+                            imagecopyresized($destino, $origen, 0, 0, 0, 0, $nuevoAncho, $nuevoAlto, $ancho, $alto);
+                            imagepng($destino, $rutaNueva);
+                        } else {
+                            $origen = imagecreatefromjpeg($fileInput["tmp_name"]);
+                            imagecopyresized($destino, $origen, 0, 0, 0, 0, $nuevoAncho, $nuevoAlto, $ancho, $alto);
+                            imagejpeg($destino, $rutaNueva);
+                        }
+                        imagedestroy($origen);
+                        imagedestroy($destino);
+                        $ruta = $rutaNueva;
+                    }
+
+                } else {
+                    echo "<script>
+                        Swal.fire({
+                            icon: 'error',
+                            title: '¡Error al subir la imagen!',
+                            text: 'La imagen no debe pesar más de 4MB',
+                            showConfirmButton: true,
+                            confirmButtonText: 'Cerrar'
+                        });
+                    </script>";
+                    exit;
+                }
+            } else {
+                echo "<script>
+                    Swal.fire({
+                        icon: 'error',
+                        title: '¡Error al subir la imagen!',
+                        text: 'La imagen debe estar en formato JPG o PNG',
+                        showConfirmButton: true,
+                        confirmButtonText: 'Cerrar'
+                    });
+                </script>";
+                exit;
+            }
+        }
+
+        return $ruta;
+    }
 
 }//fin de la clase ControladorUsuarios
