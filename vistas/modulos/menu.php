@@ -99,41 +99,36 @@
              </a>
            </li>
 
-           <li class="nav-item">
-             <a href="inscripciones2" class="nav-link">
-               <i class="nav-icon fas fa-pencil-alt text-success"></i>
-               <p>
-                 Inscripciones 2
-               </p>
-             </a>
-           </li>
 
-           <li class="nav-item menu-open">
-             <a href="#" class="nav-link">
-               <i class="nav-icon fas fa-handshake"></i>
-               <p>
-                 Gestión
-                 <i class="right fas fa-angle-left"></i>
-               </p>
-             </a>
 
-             <ul class="nav nav-treeview">
-               <li class="nav-item">
-                 <a href="verificacion" class="nav-link">
-                   <i class="far fa-circle nav-icon"></i>
-                   <p>Verificación</p>
-                 </a>
-               </li>
-
-               <li class="nav-item">
-                 <a href="puntuacion" class="nav-link">
-                   <i class="far fa-circle nav-icon"></i>
-                   <p>Puntuación</p>
-                 </a>
-               </li>
-
-             </ul>
-           </li>
+           <?php if ($_SESSION["rol"] == "GESTORA" || $_SESSION["rol"] == "ADMIN"): ?>
+            <li class="nav-item menu-open">
+              <a href="#" class="nav-link">
+                <i class="nav-icon fas fa-handshake"></i>
+                <p>
+                  Gestión
+                  <i class="right fas fa-angle-left"></i>
+                </p>
+              </a>
+ 
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="verificacion" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Verificación</p>
+                  </a>
+                </li>
+ 
+                <li class="nav-item">
+                  <a href="puntuacion" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Puntuación</p>
+                  </a>
+                </li>
+ 
+              </ul>
+            </li>
+            <?php endif; ?>
 
            <li class="nav-item">
              <a href="financiera" class="nav-link">
