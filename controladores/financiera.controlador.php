@@ -17,4 +17,32 @@ class ControladorFinanciera {
         $respuesta = ModeloFinanciera::mdlListarConvocatoriasFinanciera();
         return $respuesta;
     }
+
+    /*=============================================
+    LISTAR PENDIENTES BANCARIOS
+    =============================================*/
+    static public function ctrListarPendientesBancarios() {
+        $respuesta = ModeloFinanciera::mdlListarPendientesBancarios();
+        return $respuesta;
+    }
+
+    /*=============================================
+    APROBAR DOCUMENTO BANCARIO
+    =============================================*/
+    static public function ctrAprobarDocumentoBancario($idInscripcion, $mesesOtorgados, $fechaInicio) {
+        $respuesta = ModeloFinanciera::mdlAprobarDocumentoBancario($idInscripcion, $mesesOtorgados, $fechaInicio);
+        return $respuesta;
+    }
+
+    /*=============================================
+    RECHAZAR DOCUMENTO BANCARIO
+    =============================================*/
+    static public function ctrRechazarDocumentoBancario($idInscripcion, $observacion) {
+        $respuesta = ModeloFinanciera::mdlRechazarDocumentoBancario($idInscripcion, $observacion);
+        
+        // Si hay un documento fisico, podria eliminarse aqui, pero lo dejaremos asi para no complicar, 
+        // igual el aprendiz lo va a sobreescribir.
+        return $respuesta;
+    }
+
 }

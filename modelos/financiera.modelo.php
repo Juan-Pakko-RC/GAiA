@@ -60,4 +60,88 @@ class ModeloFinanciera {
         
         return $resultados;
     }
+
+    /*=============================================
+    LISTAR PENDIENTES BANCARIOS (FINANCIERA)
+    =============================================*/
+    static public function mdlListarPendientesBancarios() {
+        $stmt = Conexion::conectar()->prepare("
+            SELECT 
+                i.id AS inscripcion_id,
+                u.documento_id AS identificacion,
+                CONCAT(u.nombres, ' ', u.apellidos) AS aprendiz,
+                f.programa_ficha AS programa_formacion,
+                i.banco,
+                i.numero_cuenta,
+                i.documento_bancario_url,
+                ap.descripcion_apoyo
+            FROM inscripciones i
+            JOIN usuarios u ON i.usuario_id = u.id
+            JOIN fichas f ON i.ficha_id = f.id_ficha  
+            JOIN convocatorias c ON i.convocatoria_id = c.id
+            JOIN apoyos ap ON c.apoyo_id = ap.id_apoyo
+            WHERE i.estado = 'DOCUMENTO_BANCARIO_CARGADO'
+            ORDER BY i.fecha_postulacion DESC
+        ");
+
+        $stmt->execute();
+        
+        $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt = null;
+        
+        return $resultados;
+    }
+
+    /*=============================================
+    APROBAR DOCUMENTO BANCARIO Y CREAR ASIGNACION
+    =============================================*/
+    static public function mdlAprobarDocumentoBancario($idInscripcion, $mesesOtorgados, $fechaInicio) {
+        $conexion = Conexion::conectar();
+        
+        try {
+            $conexion->beginTransaction();
+
+            // 1. Actualizar estado de inscripcion
+            $stmt1 = $conexion->prepare("UPDATE inscripciones SET estado = 'APROBADO_FINANCIERA' WHERE id = :id");
+            $stmt1->bindParam(":id", $idInscripcion, PDO::PARAM_INT);
+            $stmt1->execute();
+
+            // 2. Crear registro en asignaciones
+            $stmt2 = $conexion->prepare("INSERT INTO asignaciones (inscripcion_id, meses_otorgados, fecha_inicio_real, estado) 
+                                         VALUES (:inscripcion_id, :meses_otorgados, :fecha_inicio, 'ACTIVO')");
+            $stmt2->bindParam(":inscripcion_id", $idInscripcion, PDO::PARAM_INT);
+            $stmt2->bindParam(":meses_otorgados", $mesesOtorgados, PDO::PARAM_INT);
+            $stmt2->bindParam(":fecha_inicio", $fechaInicio, PDO::PARAM_STR);
+            $stmt2->execute();
+
+            $conexion->commit();
+            return "ok";
+        } catch (Exception $e) {
+            $conexion->rollBack();
+            return "error";
+        }
+    }
+
+    /*=============================================
+    RECHAZAR DOCUMENTO BANCARIO
+    =============================================*/
+    static public function mdlRechazarDocumentoBancario($idInscripcion, $observacion) {
+        $stmt = Conexion::conectar()->prepare("UPDATE inscripciones SET 
+            estado = 'BENEFICIADO_PENDIENTE_DOC',
+            observacion_rechazo_financiera = :observacion,
+            banco = NULL,
+            numero_cuenta = NULL,
+            documento_bancario_url = NULL
+            WHERE id = :id");
+        
+        $stmt->bindParam(":observacion", $observacion, PDO::PARAM_STR);
+        $stmt->bindParam(":id", $idInscripcion, PDO::PARAM_INT);
+
+        if ($stmt->execute()) {
+            return "ok";
+        } else {
+            return "error";
+        }
+    }
+
 }
