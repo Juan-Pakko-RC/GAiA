@@ -149,7 +149,7 @@ $pendientesBancarios = ControladorFinanciera::ctrListarPendientesBancarios();
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach ($beneficiarios as $ben): ?>
+                                        <?php foreach ($beneficiarios as $key => $ben): ?>
                                             <tr>
                                                 <td><?php echo $ben["identificacion"]; ?></td>
                                                 <td><?php echo $ben["aprendiz"]; ?></td>
@@ -172,6 +172,41 @@ $pendientesBancarios = ControladorFinanciera::ctrListarPendientesBancarios();
                                                 </td>
                                                 <td class="text-center">
                                                     <div class="btn-group">
+                                                        <?php
+                                                        // Dividir nombres y apellidos
+                                                        $nombresParts = explode(" ", trim($ben["nombres"]));
+                                                        $primerNombre = $nombresParts[0];
+                                                        $segundoNombre = count($nombresParts) > 1 ? implode(" ", array_slice($nombresParts, 1)) : "";
+
+                                                        $apellidosParts = explode(" ", trim($ben["apellidos"]));
+                                                        $primerApellido = $apellidosParts[0];
+                                                        $segundoApellido = count($apellidosParts) > 1 ? implode(" ", array_slice($apellidosParts, 1)) : "";
+                                                        ?>
+                                                        <button class="btn btn-sm btn-outline-light btnFormatoTerceros mr-1"
+                                                            data-primer-nombre="<?php echo $primerNombre; ?>"
+                                                            data-segundo-nombre="<?php echo $segundoNombre; ?>"
+                                                            data-primer-apellido="<?php echo $primerApellido; ?>"
+                                                            data-segundo-apellido="<?php echo $segundoApellido; ?>"
+                                                            data-tipo-documento="<?php echo $ben["tipo_documento"]; ?>"
+                                                            data-identificacion="<?php echo $ben["identificacion"]; ?>"
+                                                            data-correo="<?php echo $ben["correo"]; ?>"
+                                                            data-banco="<?php echo $ben["banco"]; ?>"
+                                                            data-numero-cuenta="<?php echo $ben["numero_cuenta"]; ?>"
+                                                            data-toggle="modal" data-target="#modal-formatoTerceros"
+                                                            title="Formato de Terceros">
+                                                            <i class="fas fa-id-card"></i>
+                                                        </button>
+                                                        <button class="btn btn-sm btn-outline-light btnValoresComprometer mr-1"
+                                                            data-consecutivo="<?php echo ($key + 1); ?>"
+                                                            data-identificacion="<?php echo $ben["identificacion"]; ?>"
+                                                            data-aprendiz="<?php echo $ben["aprendiz"]; ?>"
+                                                            data-meses="<?php echo $ben["meses_beneficio"]; ?>"
+                                                            data-banco="<?php echo $ben["banco"]; ?>"
+                                                            data-numero-cuenta="<?php echo $ben["numero_cuenta"]; ?>"
+                                                            data-toggle="modal" data-target="#modal-valoresComprometer"
+                                                            title="Valores a Comprometer">
+                                                            <i class="fas fa-dollar-sign"></i>
+                                                        </button>
                                                         <button class="btn btn-sm btn-outline-light btnDescargarPdf"
                                                             data-identificacion="<?php echo $ben["identificacion"]; ?>"
                                                             data-aprendiz="<?php echo $ben["aprendiz"]; ?>"
@@ -181,7 +216,8 @@ $pendientesBancarios = ControladorFinanciera::ctrListarPendientesBancarios();
                                                             data-inicio="<?php echo $ben["fecha_inicio_pago"]; ?>"
                                                             data-fin="<?php echo $ben["fecha_fin_pago"]; ?>"
                                                             data-estado="<?php echo $ben["estado_asignacion"]; ?>"
-                                                            data-apoyo="<?php echo $conv["descripcion_apoyo"]; ?>">
+                                                            data-apoyo="<?php echo $conv["descripcion_apoyo"]; ?>"
+                                                            title="Descargar PDF">
                                                             <i class="fas fa-file-pdf"></i>
                                                         </button>
                                                     </div>
@@ -200,6 +236,287 @@ $pendientesBancarios = ControladorFinanciera::ctrListarPendientesBancarios();
     </div>
 </section>
 <!-- /.content -->
+
+<!-- MODAL FORMATO DE TERCEROS -->
+<div class="modal fade" id="modal-formatoTerceros" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header" style="background-color: #343a40;">
+                <h4 class="modal-title font-weight-bold"><i class="fas fa-id-card mr-2 text-success"></i> Formato de
+                    Terceros</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="background-color: #454d55 !important;">
+                <div class="row">
+                    <!-- Primer Nombre -->
+                    <div class="col-md-6 form-group">
+                        <label>Primer Nombre</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" id="terPrimerNombre" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <!-- Segundo Nombre -->
+                    <div class="col-md-6 form-group">
+                        <label>Segundo Nombre</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" id="terSegundoNombre" class="form-control" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Primer Apellido -->
+                    <div class="col-md-6 form-group">
+                        <label>Primer Apellido</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" id="terPrimerApellido" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <!-- Segundo Apellido -->
+                    <div class="col-md-6 form-group">
+                        <label>Segundo Apellido</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" id="terSegundoApellido" class="form-control" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Tipo de Documento -->
+                    <div class="col-md-6 form-group">
+                        <label>Tipo de Documento</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                            </div>
+                            <input type="text" id="terTipoDocumento" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <!-- Número de Documento -->
+                    <div class="col-md-6 form-group">
+                        <label>Número de Documento</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                            </div>
+                            <input type="text" id="terNumeroDocumento" class="form-control" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Teléfono Celular -->
+                    <div class="col-md-6 form-group">
+                        <label>Teléfono Celular</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                            </div>
+                            <input type="text" id="terTelefono" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <!-- Correo Electrónico -->
+                    <div class="col-md-6 form-group">
+                        <label>Correo Electrónico</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            </div>
+                            <input type="text" id="terCorreo" class="form-control" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Dirección -->
+                    <div class="col-md-6 form-group">
+                        <label>Dirección</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                            </div>
+                            <input type="text" id="terDireccion" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <!-- Ciudad -->
+                    <div class="col-md-6 form-group">
+                        <label>Ciudad</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-city"></i></span>
+                            </div>
+                            <input type="text" id="terCiudad" class="form-control" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Código de Ciudad -->
+                    <div class="col-md-6 form-group">
+                        <label>Código de Ciudad</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-barcode"></i></span>
+                            </div>
+                            <input type="text" id="terCodigoCiudad" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <!-- Departamento -->
+                    <div class="col-md-6 form-group">
+                        <label>Departamento</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-map"></i></span>
+                            </div>
+                            <input type="text" id="terDepartamento" class="form-control" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Código de Departamento -->
+                    <div class="col-md-6 form-group">
+                        <label>Código de Departamento</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-barcode"></i></span>
+                            </div>
+                            <input type="text" id="terCodigoDepartamento" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <!-- Banco -->
+                    <div class="col-md-6 form-group">
+                        <label>Banco</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-university"></i></span>
+                            </div>
+                            <input type="text" id="terBanco" class="form-control" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- No. Cuenta -->
+                    <div class="col-md-6 form-group">
+                        <label>No. Cuenta</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-credit-card"></i></span>
+                            </div>
+                            <input type="text" id="terNumeroCuenta" class="form-control" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-end" style="background-color: #343a40;">
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL VALORES A COMPROMETER -->
+<div class="modal fade" id="modal-valoresComprometer" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header" style="background-color: #343a40;">
+                <h4 class="modal-title font-weight-bold"><i class="fas fa-dollar-sign mr-2 text-success"></i> Valores a
+                    Comprometer</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="background-color: #454d55 !important;">
+                <div class="row">
+                    <!-- Número Documento -->
+                    <div class="col-md-6 form-group">
+                        <label>Número Documento</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                            </div>
+                            <input type="text" id="compNumeroDocumento" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <!-- Nombre del Aprendiz -->
+                    <div class="col-md-6 form-group">
+                        <label>Nombre del Aprendiz</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" id="compNombreAprendiz" class="form-control" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Valor RP -->
+                    <div class="col-md-6 form-group">
+                        <label>Valor RP</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-money-bill-wave"></i></span>
+                            </div>
+                            <input type="text" id="compValorRp" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <!-- Tiempo -->
+                    <div class="col-md-6 form-group">
+                        <label>Tiempo</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                            </div>
+                            <input type="text" id="compTiempo" class="form-control" readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Banco -->
+                    <div class="col-md-6 form-group">
+                        <label>Banco</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-university"></i></span>
+                            </div>
+                            <input type="text" id="compBanco" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <!-- Número de Cuenta -->
+                    <div class="col-md-6 form-group">
+                        <label>Número de Cuenta</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-credit-card"></i></span>
+                            </div>
+                            <input type="text" id="compNumeroCuenta" class="form-control" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-end" style="background-color: #343a40;">
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Estilos para las tabs oscuras -->
 <style>

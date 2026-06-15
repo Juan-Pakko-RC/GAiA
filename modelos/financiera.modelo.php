@@ -15,13 +15,19 @@ class ModeloFinanciera
                 ap.descripcion_apoyo AS tipo_apoyo,
                 c.id AS nro_convocatoria,
                 u.documento_id AS identificacion,
+                u.tipo_documento,
+                u.nombres,
+                u.apellidos,
                 CONCAT(u.nombres, ' ', u.apellidos) AS aprendiz,
+                u.correo,
                 f.codigo AS codigo_ficha,
                 f.programa_ficha AS programa_formacion,
                 a.meses_otorgados AS meses_beneficio,
                 a.fecha_inicio_real AS fecha_inicio_pago,
                 DATE_ADD(a.fecha_inicio_real, INTERVAL a.meses_otorgados MONTH) AS fecha_fin_pago,
-                a.estado AS estado_asignacion
+                a.estado AS estado_asignacion,
+                i.banco,
+                i.numero_cuenta
             FROM asignaciones a
             JOIN inscripciones i ON a.inscripcion_id = i.id
             JOIN usuarios u ON i.usuario_id = u.id

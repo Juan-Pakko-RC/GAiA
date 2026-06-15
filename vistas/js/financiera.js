@@ -246,5 +246,44 @@ $(document).ready(function() {
 
         pdfMake.createPdf(docDefinition).download(`Reporte_Asignacion_${datos.identificacion}.pdf`);
     });
+    // =======================================================
+    // MOSTRAR DETALLE FORMATO DE TERCEROS EN MODAL
+    // =======================================================
+    $(document).on("click", ".btnFormatoTerceros", function() {
+        const datos = $(this).data();
+
+        $("#terPrimerNombre").val(datos.primerNombre || "");
+        $("#terSegundoNombre").val(datos.segundoNombre || "");
+        $("#terPrimerApellido").val(datos.primerApellido || "");
+        $("#terSegundoApellido").val(datos.segundoApellido || "");
+        $("#terTipoDocumento").val(datos.tipoDocumento || "");
+        $("#terNumeroDocumento").val(datos.identificacion || "");
+        $("#terCorreo").val(datos.correo || "");
+        $("#terBanco").val(datos.banco || "");
+        $("#terNumeroCuenta").val(datos.numeroCuenta || "");
+
+        // Campos no disponibles en BD (vacíos por defecto)
+        $("#terTelefono").val("");
+        $("#terDireccion").val("");
+        $("#terCiudad").val("");
+        $("#terCodigoCiudad").val("");
+        $("#terDepartamento").val("");
+        $("#terCodigoDepartamento").val("");
+    });
+    // =======================================================
+    // MOSTRAR VALORES A COMPROMETER EN MODAL
+    // =======================================================
+    $(document).on("click", ".btnValoresComprometer", function() {
+        const datos = $(this).data();
+
+        $("#compNumeroDocumento").val(datos.identificacion || "");
+        $("#compNombreAprendiz").val(datos.aprendiz || "");
+        $("#compTiempo").val(datos.meses ? datos.meses + " meses" : "");
+        $("#compBanco").val(datos.banco || "");
+        $("#compNumeroCuenta").val(datos.numeroCuenta || "");
+
+        // Campo no disponible en BD (vacío por defecto)
+        $("#compValorRp").val("");
+    });
 
 });
