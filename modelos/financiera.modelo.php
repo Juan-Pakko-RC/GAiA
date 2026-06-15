@@ -2,12 +2,14 @@
 
 require_once "conexion.php";
 
-class ModeloFinanciera {
+class ModeloFinanciera
+{
 
     /*=============================================
     MOSTRAR BENEFICIARIOS POR CONVOCATORIA
     =============================================*/
-    static public function mdlMostrarBeneficiarios($idConvocatoria) {
+    static public function mdlMostrarBeneficiarios($idConvocatoria)
+    {
         $stmt = Conexion::conectar()->prepare("
             SELECT 
                 ap.descripcion_apoyo AS tipo_apoyo,
@@ -32,17 +34,18 @@ class ModeloFinanciera {
 
         $stmt->bindParam(":idConvocatoria", $idConvocatoria, PDO::PARAM_INT);
         $stmt->execute();
-        
+
         $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $stmt = null;
-        
+
         return $resultados;
     }
 
     /*=============================================
     LISTAR CONVOCATORIAS CON BENEFICIARIOS (ASIGNACIONES)
     =============================================*/
-    static public function mdlListarConvocatoriasFinanciera() {
+    static public function mdlListarConvocatoriasFinanciera()
+    {
         $stmt = Conexion::conectar()->prepare("
             SELECT DISTINCT c.id, c.apoyo_id, ap.descripcion_apoyo, ap.apoyo_icono
             FROM convocatorias c
@@ -54,17 +57,18 @@ class ModeloFinanciera {
         ");
 
         $stmt->execute();
-        
+
         $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $stmt = null;
-        
+
         return $resultados;
     }
 
     /*=============================================
     LISTAR PENDIENTES BANCARIOS (FINANCIERA)
     =============================================*/
-    static public function mdlListarPendientesBancarios() {
+    static public function mdlListarPendientesBancarios()
+    {
         $stmt = Conexion::conectar()->prepare("
             SELECT 
                 i.id AS inscripcion_id,
@@ -85,19 +89,20 @@ class ModeloFinanciera {
         ");
 
         $stmt->execute();
-        
+
         $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $stmt = null;
-        
+
         return $resultados;
     }
 
     /*=============================================
     APROBAR DOCUMENTO BANCARIO Y CREAR ASIGNACION
     =============================================*/
-    static public function mdlAprobarDocumentoBancario($idInscripcion, $mesesOtorgados, $fechaInicio) {
+    static public function mdlAprobarDocumentoBancario($idInscripcion, $mesesOtorgados, $fechaInicio)
+    {
         $conexion = Conexion::conectar();
-        
+
         try {
             $conexion->beginTransaction();
 
@@ -125,7 +130,8 @@ class ModeloFinanciera {
     /*=============================================
     RECHAZAR DOCUMENTO BANCARIO
     =============================================*/
-    static public function mdlRechazarDocumentoBancario($idInscripcion, $observacion) {
+    static public function mdlRechazarDocumentoBancario($idInscripcion, $observacion)
+    {
         $stmt = Conexion::conectar()->prepare("UPDATE inscripciones SET 
             estado = 'BENEFICIADO_PENDIENTE_DOC',
             observacion_rechazo_financiera = :observacion,
@@ -133,7 +139,7 @@ class ModeloFinanciera {
             numero_cuenta = NULL,
             documento_bancario_url = NULL
             WHERE id = :id");
-        
+
         $stmt->bindParam(":observacion", $observacion, PDO::PARAM_STR);
         $stmt->bindParam(":id", $idInscripcion, PDO::PARAM_INT);
 
