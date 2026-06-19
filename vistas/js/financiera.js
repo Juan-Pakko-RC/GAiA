@@ -263,18 +263,8 @@ $(document).ready(function() {
             processData: false,
             dataType: "json",
             success: function(respuesta) {
-                let nombresParts = (respuesta["nombres"] || "").trim().split(" ");
-                let primerNombre = nombresParts[0] || "";
-                let segundoNombre = nombresParts.slice(1).join(" ") || "";
-
-                let apellidosParts = (respuesta["apellidos"] || "").trim().split(" ");
-                let primerApellido = apellidosParts[0] || "";
-                let segundoApellido = apellidosParts.slice(1).join(" ") || "";
-
-                $("#terPrimerNombre").val(primerNombre);
-                $("#terSegundoNombre").val(segundoNombre);
-                $("#terPrimerApellido").val(primerApellido);
-                $("#terSegundoApellido").val(segundoApellido);
+                $("#terNombres").val(respuesta["nombres"] || "");
+                $("#terApellidos").val(respuesta["apellidos"] || "");
                 $("#terTipoDocumento").val(respuesta["tipo_documento"] || "");
                 $("#terNumeroDocumento").val(respuesta["identificacion"] || "");
                 $("#terCorreo").val(respuesta["correo"] || "");

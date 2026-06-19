@@ -227,55 +227,29 @@ $pendientesBancarios = ControladorFinanciera::ctrListarPendientesBancarios();
             </div>
             <div class="modal-body" style="background-color: #454d55 !important;">
                 <div class="row">
-                    <!-- Primer Nombre -->
-                    <div class="col-md-6 form-group">
-                        <label>Primer Nombre</label>
+                    <!-- Nombres -->
+                    <div class="col-md-4 form-group">
+                        <label>Nombres</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-user"></i></span>
                             </div>
-                            <input type="text" id="terPrimerNombre" class="form-control" readonly>
+                            <input type="text" id="terNombres" class="form-control" readonly>
                         </div>
                     </div>
-                    <!-- Segundo Nombre -->
-                    <div class="col-md-6 form-group">
-                        <label>Segundo Nombre</label>
+                    <!-- Apellidos -->
+                    <div class="col-md-4 form-group">
+                        <label>Apellidos</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-user"></i></span>
                             </div>
-                            <input type="text" id="terSegundoNombre" class="form-control" readonly>
+                            <input type="text" id="terApellidos" class="form-control" readonly>
                         </div>
                     </div>
-                </div>
-
-                <div class="row">
-                    <!-- Primer Apellido -->
-                    <div class="col-md-6 form-group">
-                        <label>Primer Apellido</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-user"></i></span>
-                            </div>
-                            <input type="text" id="terPrimerApellido" class="form-control" readonly>
-                        </div>
-                    </div>
-                    <!-- Segundo Apellido -->
-                    <div class="col-md-6 form-group">
-                        <label>Segundo Apellido</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-user"></i></span>
-                            </div>
-                            <input type="text" id="terSegundoApellido" class="form-control" readonly>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row">
                     <!-- Tipo de Documento -->
-                    <div class="col-md-6 form-group">
-                        <label>Tipo de Documento</label>
+                    <div class="col-md-2 form-group">
+                        <label>Tipo Doc.</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-id-card"></i></span>
@@ -284,8 +258,8 @@ $pendientesBancarios = ControladorFinanciera::ctrListarPendientesBancarios();
                         </div>
                     </div>
                     <!-- Número de Documento -->
-                    <div class="col-md-6 form-group">
-                        <label>Número de Documento</label>
+                    <div class="col-md-2 form-group">
+                        <label>Nro. Documento</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-id-card"></i></span>
@@ -296,18 +270,8 @@ $pendientesBancarios = ControladorFinanciera::ctrListarPendientesBancarios();
                 </div>
 
                 <div class="row">
-                    <!-- Teléfono Celular -->
-                    <div class="col-md-6 form-group">
-                        <label>Teléfono Celular</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                            </div>
-                            <input type="text" id="terTelefono" class="form-control" readonly>
-                        </div>
-                    </div>
                     <!-- Correo Electrónico -->
-                    <div class="col-md-6 form-group">
+                    <div class="col-md-4 form-group">
                         <label>Correo Electrónico</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
@@ -316,11 +280,18 @@ $pendientesBancarios = ControladorFinanciera::ctrListarPendientesBancarios();
                             <input type="text" id="terCorreo" class="form-control" readonly>
                         </div>
                     </div>
-                </div>
-
-                <div class="row">
+                    <!-- Teléfono Celular -->
+                    <div class="col-md-3 form-group">
+                        <label>Teléfono Celular</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                            </div>
+                            <input type="text" id="terTelefono" class="form-control" readonly>
+                        </div>
+                    </div>
                     <!-- Dirección -->
-                    <div class="col-md-6 form-group">
+                    <div class="col-md-5 form-group">
                         <label>Dirección</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
@@ -329,8 +300,11 @@ $pendientesBancarios = ControladorFinanciera::ctrListarPendientesBancarios();
                             <input type="text" id="terDireccion" class="form-control" readonly>
                         </div>
                     </div>
+                </div>
+
+                <div class="row">
                     <!-- Ciudad -->
-                    <div class="col-md-6 form-group">
+                    <div class="col-md-4 form-group">
                         <label>Ciudad</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
@@ -339,12 +313,9 @@ $pendientesBancarios = ControladorFinanciera::ctrListarPendientesBancarios();
                             <input type="text" id="terCiudad" class="form-control" readonly>
                         </div>
                     </div>
-                </div>
-
-                <div class="row">
                     <!-- Código de Ciudad -->
-                    <div class="col-md-6 form-group">
-                        <label>Código de Ciudad</label>
+                    <div class="col-md-2 form-group">
+                        <label>Cód. Ciudad</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-barcode"></i></span>
@@ -353,7 +324,7 @@ $pendientesBancarios = ControladorFinanciera::ctrListarPendientesBancarios();
                         </div>
                     </div>
                     <!-- Departamento -->
-                    <div class="col-md-6 form-group">
+                    <div class="col-md-4 form-group">
                         <label>Departamento</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
@@ -362,12 +333,9 @@ $pendientesBancarios = ControladorFinanciera::ctrListarPendientesBancarios();
                             <input type="text" id="terDepartamento" class="form-control" readonly>
                         </div>
                     </div>
-                </div>
-
-                <div class="row">
                     <!-- Código de Departamento -->
-                    <div class="col-md-6 form-group">
-                        <label>Código de Departamento</label>
+                    <div class="col-md-2 form-group">
+                        <label>Cód. Depto.</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <span class="input-group-text"><i class="fas fa-barcode"></i></span>
@@ -375,6 +343,9 @@ $pendientesBancarios = ControladorFinanciera::ctrListarPendientesBancarios();
                             <input type="text" id="terCodigoDepartamento" class="form-control" readonly>
                         </div>
                     </div>
+                </div>
+
+                <div class="row">
                     <!-- Banco -->
                     <div class="col-md-6 form-group">
                         <label>Banco</label>
@@ -385,9 +356,6 @@ $pendientesBancarios = ControladorFinanciera::ctrListarPendientesBancarios();
                             <input type="text" id="terBanco" class="form-control" readonly>
                         </div>
                     </div>
-                </div>
-
-                <div class="row">
                     <!-- No. Cuenta -->
                     <div class="col-md-6 form-group">
                         <label>No. Cuenta</label>
