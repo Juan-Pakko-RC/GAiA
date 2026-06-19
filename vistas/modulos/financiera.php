@@ -368,7 +368,10 @@ $pendientesBancarios = ControladorFinanciera::ctrListarPendientesBancarios();
                     </div>
                 </div>
             </div>
-            <div class="modal-footer justify-content-end" style="background-color: #343a40;">
+            <div class="modal-footer justify-content-between" style="background-color: #343a40;">
+                <button type="button" class="btn btn-success" id="btnDescargarExcelTercero">
+                    <i class="fas fa-file-excel mr-2"></i> Descargar Excel
+                </button>
                 <button type="button" class="btn btn-outline-light" data-dismiss="modal">Cerrar</button>
             </div>
         </div>

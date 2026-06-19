@@ -281,6 +281,116 @@ $(document).ready(function() {
             }
         });
     });
+
+    // =======================================================
+    // DESCARGAR EXCEL DE FORMATO DE TERCEROS
+    // =======================================================
+    $(document).on("click", "#btnDescargarExcelTercero", function() {
+        let nombres = $("#terNombres").val() || "";
+        let apellidos = $("#terApellidos").val() || "";
+        let tipoDocumento = $("#terTipoDocumento").val() || "";
+        let numeroDocumento = $("#terNumeroDocumento").val() || "";
+        let correo = $("#terCorreo").val() || "";
+        let telefono = $("#terTelefono").val() || "";
+        let direccion = $("#terDireccion").val() || "";
+        let ciudad = $("#terCiudad").val() || "";
+        let codigoCiudad = $("#terCodigoCiudad").val() || "";
+        let departamento = $("#terDepartamento").val() || "";
+        let codigoDepartamento = $("#terCodigoDepartamento").val() || "";
+        let banco = $("#terBanco").val() || "";
+        let numeroCuenta = $("#terNumeroCuenta").val() || "";
+
+        let excelTemplate = `
+        <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+        <head>
+        <meta charset="UTF-8">
+        <!--[if gte mso 9]>
+        <xml>
+         <x:ExcelWorkbook>
+          <x:ExcelWorksheets>
+           <x:ExcelWorksheet>
+            <x:Name>Formato de Tercero</x:Name>
+            <x:WorksheetOptions>
+             <x:DisplayGridlines/>
+            </x:WorksheetOptions>
+           </x:ExcelWorksheet>
+          </x:ExcelWorksheets>
+         </x:ExcelWorkbook>
+        </xml>
+        <![endif]-->
+        </head>
+        <body>
+        <table border="1">
+          <tr style="background-color: #198754; color: white; font-weight: bold;">
+            <th colspan="2" style="font-size: 14pt; padding: 10px; text-align: center;">FORMATO DE TERCERO</th>
+          </tr>
+          <tr>
+            <td style="font-weight: bold; background-color: #f2f2f2; width: 200px;">Nombres</td>
+            <td style="width: 300px;">${nombres}</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold; background-color: #f2f2f2;">Apellidos</td>
+            <td>${apellidos}</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold; background-color: #f2f2f2;">Tipo de Documento</td>
+            <td>${tipoDocumento}</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold; background-color: #f2f2f2;">Número de Documento</td>
+            <td style="text-align: left; mso-number-format: '\\@';">${numeroDocumento}</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold; background-color: #f2f2f2;">Correo Electrónico</td>
+            <td>${correo}</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold; background-color: #f2f2f2;">Teléfono Celular</td>
+            <td style="text-align: left; mso-number-format: '\\@';">${telefono}</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold; background-color: #f2f2f2;">Dirección</td>
+            <td>${direccion}</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold; background-color: #f2f2f2;">Ciudad</td>
+            <td>${ciudad}</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold; background-color: #f2f2f2;">Código de Ciudad</td>
+            <td style="text-align: left; mso-number-format: '\\@';">${codigoCiudad}</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold; background-color: #f2f2f2;">Departamento</td>
+            <td>${departamento}</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold; background-color: #f2f2f2;">Código de Departamento</td>
+            <td style="text-align: left; mso-number-format: '\\@';">${codigoDepartamento}</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold; background-color: #f2f2f2;">Banco</td>
+            <td>${banco}</td>
+          </tr>
+          <tr>
+            <td style="font-weight: bold; background-color: #f2f2f2;">No. Cuenta</td>
+            <td style="text-align: left; mso-number-format: '\\@';">${numeroCuenta}</td>
+          </tr>
+        </table>
+        </body>
+        </html>
+        `;
+
+        let blob = new Blob([excelTemplate], { type: "application/vnd.ms-excel;charset=utf-8;" });
+        let link = document.createElement("a");
+        let url = URL.createObjectURL(blob);
+        link.href = url;
+        link.download = `Formato_Tercero_${numeroDocumento}.xls`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
+
     // =======================================================
     // MOSTRAR VALORES A COMPROMETER EN MODAL
     // =======================================================
