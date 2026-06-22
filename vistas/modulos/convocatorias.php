@@ -119,7 +119,9 @@
                                           <select id="apoyo_id" name="apoyo_id" class="form-control" required>
                                               <option value="" disabled selected>Seleccione un apoyo...</option>
                                               <?php
-                                                $apoyos = ControladorApoyos::ctrMostrarApoyos(null, null);
+                                                $estado = "estado_apoyo";
+                                                $estadoApoyo = 1;
+                                                $apoyos = ControladorApoyos::ctrMostrarApoyos($estado, $estadoApoyo);
                                                 if($apoyos){
                                                     foreach ($apoyos as $key => $value) {
                                                         $duality = ($value["apoyo_dual"] == 1) ? 'true' : 'false';
