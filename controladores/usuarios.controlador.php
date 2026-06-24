@@ -32,7 +32,7 @@ class ControladorUsuarios{
                             $_SESSION["rol"] = $respuesta["rol"];
                             $_SESSION["ficha_id"] = $respuesta["ficha_id"];
                             $_SESSION["foto"] = $respuesta["foto"];
-                            echo "<script>window.location = 'inicio';</script>";
+                            echo "<script>window.location = 'identificacion';</script>";
                         } else{
                         // var_dump($respuesta);
                         echo  "<br><div class='alert alert-danger'>Usuario o contraseña incorrecto</div>";
@@ -132,9 +132,17 @@ class ControladorUsuarios{
                   "ficha_id" => $fichaId,
                   "foto" => $ruta
                 );
-                $respuesta= ModeloUsuarios::mdlAgregarUsuario($tabla, $datos);
+                $contacto = array(
+                    "direccion" => isset($_POST["nuevaDireccion"]) ? $_POST["nuevaDireccion"] : "",
+                    "telefono" => isset($_POST["nuevoTelefono"]) ? $_POST["nuevoTelefono"] : "",
+                    "codigo_dep" => isset($_POST["nuevoDepartamento"]) ? $_POST["nuevoDepartamento"] : "",
+                    "codigo_ciu" => isset($_POST["nuevaCiudad"]) ? $_POST["nuevaCiudad"] : ""
+                );
+
+                $respuesta= ModeloUsuarios::mdlAgregarUsuario($tabla, $datos, $contacto);
 
                 if($respuesta == "ok"){
+
                     echo "<script>
                         Swal.fire({
                             icon: 'success',
@@ -150,6 +158,16 @@ class ControladorUsuarios{
                         
                     </script>";
                     // echo "<br><div class='alert alert-success'>El usuario ha sido registrado correctamente</div>";
+                }else if($respuesta == "duplicate"){
+                    echo "<script>
+                        Swal.fire({
+                            icon: 'error',
+                            title: '¡Error!',
+                            text: 'El documento o correo ya se encuentra registrado.',
+                            showConfirmButton: true,
+                            confirmButtonText: 'Aceptar'
+                        });
+                    </script>";
                 }else{
                     echo "<br><div class='alert alert-danger'>Error al agregar el usuario</div>";
                 }
@@ -206,9 +224,17 @@ class ControladorUsuarios{
                   "ficha_id" => $fichaId,
                   "foto" => $ruta
                 );
-                $respuesta= ModeloUsuarios::mdlAgregarUsuario($tabla, $datos);
+                $contacto = array(
+                    "direccion" => isset($_POST["nuevaDireccion"]) ? $_POST["nuevaDireccion"] : "",
+                    "telefono" => isset($_POST["nuevoTelefono"]) ? $_POST["nuevoTelefono"] : "",
+                    "codigo_dep" => isset($_POST["nuevoDepartamento"]) ? $_POST["nuevoDepartamento"] : "",
+                    "codigo_ciu" => isset($_POST["nuevaCiudad"]) ? $_POST["nuevaCiudad"] : ""
+                );
+                
+                $respuesta= ModeloUsuarios::mdlAgregarUsuario($tabla, $datos, $contacto);
 
                 if($respuesta == "ok"){
+
                     echo "<script>
                         Swal.fire({
                             icon: 'success',
@@ -220,6 +246,16 @@ class ControladorUsuarios{
                             if (result.isConfirmed) {
                                 window.location = 'inicio';
                             }
+                        });
+                    </script>";
+                }else if($respuesta == "duplicate"){
+                    echo "<script>
+                        Swal.fire({
+                            icon: 'error',
+                            title: '¡Error al registrarse!',
+                            text: 'El documento o correo ya se encuentra registrado en el sistema.',
+                            showConfirmButton: true,
+                            confirmButtonText: 'Aceptar'
                         });
                     </script>";
                 }else{
@@ -307,6 +343,14 @@ class ControladorUsuarios{
                 $respuesta = ModeloUsuarios::mdlEditarUsuario($tabla, $datos);
 
                 if ($respuesta == "ok") {
+                    $contacto = array(
+                        "direccion" => isset($_POST["editarDireccion"]) ? $_POST["editarDireccion"] : "",
+                        "telefono" => isset($_POST["editarTelefono"]) ? $_POST["editarTelefono"] : "",
+                        "codigo_dep" => isset($_POST["editarDepartamento"]) ? $_POST["editarDepartamento"] : "",
+                        "codigo_ciu" => isset($_POST["editarCiudad"]) ? $_POST["editarCiudad"] : ""
+                    );
+                    ModeloUsuarios::mdlGuardarContacto($_POST["idUsuarioEditar"], $contacto);
+
                     echo "<script>
                         Swal.fire({
                             icon: 'success',
@@ -317,6 +361,16 @@ class ControladorUsuarios{
                             if (result.isConfirmed) {
                                 window.location = 'Usuarios';
                             }
+                        });
+                    </script>";
+                } else if ($respuesta == "duplicate") {
+                    echo "<script>
+                        Swal.fire({
+                            icon: 'error',
+                            title: '¡Error!',
+                            text: 'El correo electrónico editado ya está en uso por otro usuario.',
+                            showConfirmButton: true,
+                            confirmButtonText: 'Cerrar'
                         });
                     </script>";
                 } else {
@@ -393,6 +447,14 @@ class ControladorUsuarios{
 
                 if ($respuesta == "ok") {
                     
+                    $contacto = array(
+                        "direccion" => isset($_POST["editarDireccionPerfil"]) ? $_POST["editarDireccionPerfil"] : "",
+                        "telefono" => isset($_POST["editarTelefonoPerfil"]) ? $_POST["editarTelefonoPerfil"] : "",
+                        "codigo_dep" => isset($_POST["editarDepartamentoPerfil"]) ? $_POST["editarDepartamentoPerfil"] : "",
+                        "codigo_ciu" => isset($_POST["editarCiudadPerfil"]) ? $_POST["editarCiudadPerfil"] : ""
+                    );
+                    ModeloUsuarios::mdlGuardarContacto($_POST["idPerfil"], $contacto);
+
                     // Actualizar variables de sesion
                     $_SESSION["nombres"] = $_POST["editarNombrePerfil"];
                     $_SESSION["apellidos"] = $_POST["editarApellidoPerfil"];
