@@ -10,6 +10,7 @@ class AjaxFinanciera {
     public $fechaInicio;
     public $observacion;
     public $idConvocatoria;
+    public $documento;
 
     // ==============================================
     // APROBAR DOCUMENTO BANCARIO AJAX
@@ -40,6 +41,22 @@ class AjaxFinanciera {
     // ==============================================
     public function ajaxMostrarSeleccionadosRelevo() {
         $respuesta = ControladorFinanciera::ctrMostrarSeleccionadosRelevo($this->idConvocatoria);
+        echo json_encode($respuesta);
+    }
+
+    // ==============================================
+    // BUSCAR APRENDIZ ENTRANTE POR DOCUMENTO AJAX
+    // ==============================================
+    public function ajaxBuscarEntrantePorDocumento() {
+        $respuesta = ControladorFinanciera::ctrBuscarEntrantePorDocumento($this->documento, $this->idConvocatoria);
+        echo json_encode($respuesta);
+    }
+
+    // ==============================================
+    // OBTENER CONTACTO DE APRENDIZ AJAX
+    // ==============================================
+    public function ajaxObtenerContactoAprendiz() {
+        $respuesta = ControladorFinanciera::ctrObtenerContactoAprendiz($this->idInscripcion);
         echo json_encode($respuesta);
     }
 
@@ -78,6 +95,19 @@ if (isset($_POST["action"])) {
     if ($_POST["action"] == "obtenerSeleccionados" && isset($_POST["id_convocatoria"])) {
         $ajax->idConvocatoria = $_POST["id_convocatoria"];
         $ajax->ajaxMostrarSeleccionadosRelevo();
+    }
+
+    // Acción: Buscar Aprendiz Entrante por Documento
+    if ($_POST["action"] == "buscarEntrantePorDocumento" && isset($_POST["documento"]) && isset($_POST["id_convocatoria"])) {
+        $ajax->documento = $_POST["documento"];
+        $ajax->idConvocatoria = $_POST["id_convocatoria"];
+        $ajax->ajaxBuscarEntrantePorDocumento();
+    }
+
+    // Acción: Obtener Contacto de Aprendiz
+    if ($_POST["action"] == "obtenerContactoAprendiz" && isset($_POST["id_inscripcion"])) {
+        $ajax->idInscripcion = $_POST["id_inscripcion"];
+        $ajax->ajaxObtenerContactoAprendiz();
     }
 
 }

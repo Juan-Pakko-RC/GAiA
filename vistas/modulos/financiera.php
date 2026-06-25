@@ -490,7 +490,7 @@ $pendientesBancarios = ControladorFinanciera::ctrListarPendientesBancarios();
                 <div class="card bg-dark text-white border border-secondary mb-3 shadow-sm">
                     <div class="card-header border-bottom border-secondary d-flex justify-content-between align-items-center" style="background-color: #343a40;">
                         <h6 class="font-weight-bold mb-0 text-success"><i class="fas fa-user-minus mr-2"></i>Aprendiz Saliente</h6>
-                        <button type="button" class="btn btn-sm btn-outline-info" title="Información Aprendiz Saliente">
+                        <button type="button" class="btn btn-sm btn-outline-info btnVerContactoRelevo" id="btnInfoSaliente" title="Información de Contacto">
                             <i class="fas fa-info-circle"></i>
                         </button>
                     </div>
@@ -532,11 +532,8 @@ $pendientesBancarios = ControladorFinanciera::ctrListarPendientesBancarios();
 
                 <!-- SECCIÓN: APRENDIZ ENTRANTE -->
                 <div class="card bg-dark text-white border border-secondary mb-3 shadow-sm">
-                    <div class="card-header border-bottom border-secondary d-flex justify-content-between align-items-center" style="background-color: #343a40;">
+                    <div class="card-header border-bottom border-secondary" style="background-color: #343a40;">
                         <h6 class="font-weight-bold mb-0 text-success"><i class="fas fa-user-plus mr-2"></i>Aprendiz Entrante</h6>
-                        <button type="button" class="btn btn-sm btn-outline-info" title="Información Aprendiz Entrante">
-                            <i class="fas fa-info-circle"></i>
-                        </button>
                     </div>
                     <div class="card-body p-3">
                         <div class="row">
@@ -582,6 +579,8 @@ $pendientesBancarios = ControladorFinanciera::ctrListarPendientesBancarios();
                                             <th>Documento</th>
                                             <th>Nombre</th>
                                             <th>Ficha</th>
+                                            <th>Convocatoria</th>
+                                            <th>Acción</th>
                                         </tr>
                                     </thead>
                                     <tbody id="listaRelevoSeleccionados">

@@ -442,6 +442,15 @@ $(document).ready(function () {
                 $("#relevarFichaActual").val(respuesta["codigo_ficha"] || "");
                 $("#relevarMotivo").val("");
 
+                // Guardar idInscripcion en el botón de información del saliente
+                $("#btnInfoSaliente").attr("data-idInscripcion", idInscripcion);
+
+                // Guardar convocatoria actual en el input entrante
+                $("#relevarDocumentoEntrante").attr("data-idConvocatoria", respuesta["nro_convocatoria"] || "");
+                $("#relevarDocumentoEntrante").val("");
+                $("#relevarNombreEntrante").val("");
+                $("#relevarFichaEntrante").val("");
+
                 let nroConvocatoria = respuesta["nro_convocatoria"];
                 
                 // Cargar los 5 seleccionados de la misma convocatoria
@@ -465,16 +474,67 @@ $(document).ready(function () {
                                     <td class="text-center font-weight-bold">${sel.identificacion}</td>
                                     <td>${sel.aprendiz}</td>
                                     <td>${sel.codigo_ficha} - ${sel.programa_formacion}</td>
+                                    <td>${sel.convocatoria_nombre}</td>
+                                    <td class="text-center">
+                                        <button type="button" class="btn btn-xs btn-outline-info mr-1 btnVerContactoRelevo" data-idInscripcion="${sel.inscripcion_id}" title="Información de Contacto">
+                                            <i class="fas fa-info-circle"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-xs btn-success btnSeleccionarEntrante"
+                                            data-documento="${sel.identificacion}"
+                                            data-nombre="${sel.aprendiz}"
+                                            data-ficha="${sel.codigo_ficha} - ${sel.programa_formacion}"
+                                            title="Seleccionar Aprendiz">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    </td>
                                 </tr>`;
                             });
                         } else {
                             html = `<tr>
-                                <td colspan="3" class="text-center text-muted font-italic">No hay aprendices seleccionados disponibles para relevo en esta convocatoria.</td>
+                                <td colspan="5" class="text-center text-muted font-italic">No hay aprendices seleccionados disponibles para relevo en esta convocatoria.</td>
                             </tr>`;
                         }
                         $("#listaRelevoSeleccionados").html(html);
                     }
                 });
+            }
+        });
+    });
+
+    // =======================================================
+    // BUSCAR APRENDIZ ENTRANTE SELECCIONADO POR DOCUMENTO
+    // =======================================================
+    $(document).on("keyup change", "#relevarDocumentoEntrante", function () {
+        let documento = $(this).val();
+        let idConvocatoria = $(this).attr("data-idConvocatoria");
+
+        if (documento.trim() === "") {
+            $("#relevarNombreEntrante").val("");
+            $("#relevarFichaEntrante").val("");
+            return;
+        }
+
+        let datos = new FormData();
+        datos.append("action", "buscarEntrantePorDocumento");
+        datos.append("documento", documento);
+        datos.append("id_convocatoria", idConvocatoria);
+
+        $.ajax({
+            url: "ajax/financiera.ajax.php",
+            method: "POST",
+            data: datos,
+            cache: false,
+            contentType: false,
+            processData: false,
+            dataType: "json",
+            success: function (respuesta) {
+                if (respuesta) {
+                    $("#relevarNombreEntrante").val(respuesta["aprendiz"] || "");
+                    $("#relevarFichaEntrante").val((respuesta["codigo_ficha"] || "") + " - " + (respuesta["programa_formacion"] || ""));
+                } else {
+                    $("#relevarNombreEntrante").val("");
+                    $("#relevarFichaEntrante").val("");
+                }
             }
         });
     });
@@ -551,5 +611,82 @@ $(document).ready(function () {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+    });
+
+    // =======================================================
+    // SELECCIONAR APRENDIZ ENTRANTE DESDE EL LISTADO
+    // =======================================================
+    $(document).on("click", ".btnSeleccionarEntrante", function () {
+        let documento = $(this).attr("data-documento");
+        let nombre = $(this).attr("data-nombre");
+        let ficha = $(this).attr("data-ficha");
+
+        $("#relevarDocumentoEntrante").val(documento);
+        $("#relevarNombreEntrante").val(nombre);
+        $("#relevarFichaEntrante").val(ficha);
+    });
+
+    // =======================================================
+    // VER DATOS DE CONTACTO DE APRENDIZ EN SWAL
+    // =======================================================
+    $(document).on("click", ".btnVerContactoRelevo", function () {
+        let idInscripcion = $(this).attr("data-idInscripcion");
+
+        if (!idInscripcion) {
+            Swal.fire({
+                icon: "warning",
+                title: "Atención",
+                text: "No se encontró el ID de inscripción de este aprendiz.",
+                background: "#343a40",
+                confirmButtonColor: "#17a2b8"
+            });
+            return;
+        }
+
+        let datos = new FormData();
+        datos.append("action", "obtenerContactoAprendiz");
+        datos.append("id_inscripcion", idInscripcion);
+
+        $.ajax({
+            url: "ajax/financiera.ajax.php",
+            method: "POST",
+            data: datos,
+            cache: false,
+            contentType: false,
+            processData: false,
+            dataType: "json",
+            success: function (respuesta) {
+                if (respuesta) {
+                    let telefono = respuesta["telefono"] || '<span class="text-warning">No registrado</span>';
+                    let direccion = respuesta["direccion"] || '<span class="text-warning">No registrado</span>';
+                    let departamento = respuesta["departamento"] || '<span class="text-warning">No registrado</span>';
+                    let ciudad = respuesta["ciudad"] || '<span class="text-warning">No registrado</span>';
+
+                    Swal.fire({
+                        title: `<h5 class="text-success font-weight-bold mb-0"><i class="fas fa-address-book mr-2"></i>Datos de Contacto</h5>`,
+                        html: `
+                            <div class="text-left text-white" style="font-size: 0.95rem;">
+                                <p class="border-bottom border-secondary pb-2"><strong>Aprendiz:</strong> ${respuesta["aprendiz"]}</p>
+                                <p class="mb-2"><i class="fas fa-phone text-success mr-2"></i><strong>Teléfono:</strong> ${telefono}</p>
+                                <p class="mb-2"><i class="fas fa-map-marker-alt text-success mr-2"></i><strong>Dirección:</strong> ${direccion}</p>
+                                <p class="mb-2"><i class="fas fa-city text-success mr-2"></i><strong>Ciudad:</strong> ${ciudad}</p>
+                                <p class="mb-0"><i class="fas fa-map text-success mr-2"></i><strong>Departamento:</strong> ${departamento}</p>
+                            </div>
+                        `,
+                        background: "#343a40",
+                        confirmButtonText: "Entendido",
+                        confirmButtonColor: "#17a2b8"
+                    });
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: "No se pudieron obtener los datos de contacto.",
+                        background: "#343a40",
+                        confirmButtonColor: "#dc3545"
+                    });
+                }
+            }
+        });
     });
 });

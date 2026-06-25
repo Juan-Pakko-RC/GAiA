@@ -211,10 +211,13 @@ class ModeloFinanciera
                 u.documento_id AS identificacion,
                 CONCAT(u.nombres, ' ', u.apellidos) AS aprendiz,
                 f.codigo AS codigo_ficha,
-                f.programa_ficha AS programa_formacion
+                f.programa_ficha AS programa_formacion,
+                ap.descripcion_apoyo AS convocatoria_nombre
             FROM inscripciones i
             JOIN usuarios u ON i.usuario_id = u.id
             JOIN fichas f ON i.ficha_id = f.id_ficha
+            JOIN convocatorias c ON i.convocatoria_id = c.id
+            JOIN apoyos ap ON c.apoyo_id = ap.id_apoyo
             WHERE i.convocatoria_id = :idConvocatoria AND i.estado = 'SELECCIONADO'
             ORDER BY i.id DESC
             LIMIT 5
@@ -227,6 +230,67 @@ class ModeloFinanciera
         $stmt = null;
 
         return $resultados;
+    }
+
+    /*=============================================
+    BUSCAR APRENDIZ ENTRANTE SELECCIONADO POR DOCUMENTO Y CONVOCATORIA
+    =============================================*/
+    static public function mdlBuscarEntrantePorDocumento($documento, $idConvocatoria)
+    {
+        $stmt = Conexion::conectar()->prepare("
+            SELECT 
+                i.id AS inscripcion_id,
+                u.documento_id AS identificacion,
+                CONCAT(u.nombres, ' ', u.apellidos) AS aprendiz,
+                f.codigo AS codigo_ficha,
+                f.programa_ficha AS programa_formacion
+            FROM inscripciones i
+            JOIN usuarios u ON i.usuario_id = u.id
+            JOIN fichas f ON i.ficha_id = f.id_ficha
+            WHERE u.documento_id = :documento 
+              AND i.convocatoria_id = :idConvocatoria 
+              AND i.estado = 'SELECCIONADO'
+            LIMIT 1
+        ");
+
+        $stmt->bindParam(":documento", $documento, PDO::PARAM_STR);
+        $stmt->bindParam(":idConvocatoria", $idConvocatoria, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt = null;
+
+        return $resultado;
+    }
+
+    /*=============================================
+    OBTENER DATOS DE CONTACTO DE UN APRENDIZ POR ID DE INSCRIPCION
+    =============================================*/
+    static public function mdlObtenerContactoAprendiz($idInscripcion)
+    {
+        $stmt = Conexion::conectar()->prepare("
+            SELECT 
+                CONCAT(u.nombres, ' ', u.apellidos) AS aprendiz,
+                uc.telefono,
+                uc.direccion,
+                dep.nombre AS departamento,
+                ciu.nombre AS ciudad
+            FROM inscripciones i
+            JOIN usuarios u ON i.usuario_id = u.id
+            LEFT JOIN usuarios_contacto uc ON u.id = uc.usuario_id
+            LEFT JOIN departamentos dep ON uc.codigo_dep = dep.codigo_dep
+            LEFT JOIN ciudades ciu ON uc.codigo_ciu = ciu.codigo_ciu
+            WHERE i.id = :idInscripcion
+            LIMIT 1
+        ");
+
+        $stmt->bindParam(":idInscripcion", $idInscripcion, PDO::PARAM_INT);
+        $stmt->execute();
+
+        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt = null;
+
+        return $resultado;
     }
 
 }
