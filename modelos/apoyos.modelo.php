@@ -4,7 +4,7 @@ require_once "conexion.php";
 
 class ModeloApoyos
 {
-    // MOSTRAR APOYOS
+    // MOSTRAR APOYOS (No importa el estado del mismo, dado que deben poder mostrarse en la pestaña de gestión)
     static public function mdlMostrarApoyos($tabla, $item, $valor)
     {
         if ($item != null) {
@@ -18,6 +18,25 @@ class ModeloApoyos
             }
         } else {
             $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla");
+            $stmt->execute();
+            return $stmt->fetchAll();
+        }
+    }
+
+    // MOSTRAR APOYOS ACTIVOS (apoyos cuyo estado es "activo")
+    static public function mdlMostrarApoyosActivos($tabla, $item, $valor)
+    {
+        if ($item != null) {
+            $stmt = Conexion::conectar()->prepare("SELECT $tabla.*, iconos.nombre AS nombre_icono FROM $tabla LEFT JOIN iconos ON $tabla.apoyo_icono COLLATE utf8mb4_unicode_ci = iconos.codigo_fa COLLATE utf8mb4_unicode_ci WHERE $tabla.$item = :valor AND $tabla.estado_apoyo = 1");
+            $stmt->bindParam(":valor", $valor, PDO::PARAM_STR);
+            $stmt->execute();
+            if ($item == "id_apoyo") {
+                return $stmt->fetch();
+            } else {
+                return $stmt->fetchAll();
+            }
+        } else {
+            $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla WHERE estado_apoyo = 1");
             $stmt->execute();
             return $stmt->fetchAll();
         }

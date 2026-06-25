@@ -10,6 +10,14 @@ class ControladorApoyos
         return $respuesta;
     }
 
+    // MOSTRAR APOYOS ACTIVOS (apoyos cuyo estado es "activo")
+    static public function ctrMostrarApoyosActivos($item, $valor)
+    {
+        $tabla = "apoyos";
+        $respuesta = ModeloApoyos::mdlMostrarApoyosActivos($tabla, $item, $valor);
+        return $respuesta;
+    }
+
     // ACTUALIZAR APOYO DUAL U OTROS CAMPOS INDIVIDUALES
     static public function ctrActualizarApoyo($item1, $valor1, $item2, $valor2)
     {
