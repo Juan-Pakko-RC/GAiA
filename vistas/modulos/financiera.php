@@ -474,7 +474,108 @@ $pendientesBancarios = ControladorFinanciera::ctrListarPendientesBancarios();
     </div>
 </div>
 
+<!-- MODAL RELEVAR BENEFICIARIO -->
+<div class="modal fade" id="modal-relevarBeneficiario" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bg-dark text-white">
+            <div class="modal-header" style="background-color: #343a40;">
+                <h4 class="modal-title font-weight-bold"><i class="fas fa-exchange-alt mr-2 text-success"></i> Relevar Beneficiario</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+             <div class="modal-body" style="background-color: #454d55 !important;">
+                
+                <!-- SECCIÓN: APRENDIZ SALIENTE -->
+                <div class="card bg-dark text-white border border-secondary mb-3 shadow-sm">
+                    <div class="card-header border-bottom border-secondary d-flex justify-content-between align-items-center" style="background-color: #343a40;">
+                        <h6 class="font-weight-bold mb-0 text-success"><i class="fas fa-user-minus mr-2"></i>Aprendiz Saliente</h6>
+                        <button type="button" class="btn btn-sm btn-outline-info" title="Información Aprendiz Saliente">
+                            <i class="fas fa-info-circle"></i>
+                        </button>
+                    </div>
+                    <div class="card-body p-3">
+                        <div class="row">
+                            <!-- Beneficiario Actual -->
+                            <div class="col-md-6 form-group">
+                                <label>Beneficiario Actual</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    </div>
+                                    <input type="text" id="relevarNombreActual" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <!-- Documento -->
+                            <div class="col-md-6 form-group">
+                                <label>Documento Aprendiz Saliente</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                                    </div>
+                                    <input type="text" id="relevarDocumentoActual" class="form-control" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+                <!-- SECCIÓN: APRENDIZ ENTRANTE -->
+                <div class="card bg-dark text-white border border-secondary mb-3 shadow-sm">
+                    <div class="card-header border-bottom border-secondary d-flex justify-content-between align-items-center" style="background-color: #343a40;">
+                        <h6 class="font-weight-bold mb-0 text-success"><i class="fas fa-user-plus mr-2"></i>Aprendiz Entrante</h6>
+                        <button type="button" class="btn btn-sm btn-outline-info" title="Información Aprendiz Entrante">
+                            <i class="fas fa-info-circle"></i>
+                        </button>
+                    </div>
+                    <div class="card-body p-3">
+                        <div class="row">
+                            <!-- Documento Aprendiz Entrante -->
+                            <div class="col-md-6 form-group">
+                                <label>Documento Aprendiz Entrante</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                                    </div>
+                                    <input type="text" id="relevarDocumentoEntrante" class="form-control" placeholder="Ingrese documento">
+                                </div>
+                            </div>
+                            <!-- Nombre Aprendiz Entrante -->
+                            <div class="col-md-6 form-group">
+                                <label>Nombre Aprendiz Entrante</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                    </div>
+                                    <input type="text" id="relevarNombreEntrante" class="form-control" placeholder="Nombre completo" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <!-- Motivo de Relevo -->
+                    <div class="col-md-12 form-group">
+                        <label>Motivo de Relevo</label>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fas fa-comment-alt"></i></span>
+                            </div>
+                            <textarea id="relevarMotivo" class="form-control" rows="3" placeholder="Describa la razón del relevo (ej. Deserción, cancelación de matrícula, etc.)"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between" style="background-color: #343a40;">
+                <button type="button" class="btn btn-success" id="btnGuardarRelevo">
+                    <i class="fas fa-check mr-2"></i> Procesar Relevo
+                </button>
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Estilos para las tabs oscuras -->
 <style>
