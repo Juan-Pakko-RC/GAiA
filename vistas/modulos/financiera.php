@@ -516,6 +516,16 @@ $pendientesBancarios = ControladorFinanciera::ctrListarPendientesBancarios();
                                     <input type="text" id="relevarDocumentoActual" class="form-control" readonly>
                                 </div>
                             </div>
+                            <!-- Ficha -->
+                            <div class="col-md-6 form-group">
+                                <label>Ficha</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                                    </div>
+                                    <input type="text" id="relevarFichaActual" class="form-control" readonly>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -548,6 +558,16 @@ $pendientesBancarios = ControladorFinanciera::ctrListarPendientesBancarios();
                                         <span class="input-group-text"><i class="fas fa-user"></i></span>
                                     </div>
                                     <input type="text" id="relevarNombreEntrante" class="form-control" placeholder="Nombre completo" readonly>
+                                </div>
+                            </div>
+                            <!-- Ficha -->
+                            <div class="col-md-6 form-group">
+                                <label>Ficha</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fas fa-id-card"></i></span>
+                                    </div>
+                                    <input type="text" id="relevarFichaEntrante" class="form-control" readonly>
                                 </div>
                             </div>
                         </div>
